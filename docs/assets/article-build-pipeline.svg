@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 260" role="img" aria-labelledby="title desc">
+  <title id="title">Article build pipeline</title>
+  <desc id="desc">Diagram showing article plans, assets, bibliography cache, generated chapters, and final HTML output.</desc>
+  <rect width="980" height="260" fill="#f8fbff"/>
+  <rect x="40" y="90" width="180" height="80" rx="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="130" y="126" font-family="Arial" font-size="24" text-anchor="middle" fill="#1e3a8a">plan/plan.md</text>
+  <text x="130" y="150" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Chapter intent</text>
+  <rect x="270" y="40" width="190" height="70" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="365" y="82" font-family="Arial" font-size="22" text-anchor="middle" fill="#0c4a6e">plan_chN.md</text>
+  <rect x="270" y="150" width="190" height="70" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="365" y="192" font-family="Arial" font-size="22" text-anchor="middle" fill="#0c4a6e">assets.json</text>
+  <rect x="510" y="40" width="190" height="70" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="605" y="82" font-family="Arial" font-size="22" text-anchor="middle" fill="#5b21b6">chapters/</text>
+  <rect x="510" y="150" width="190" height="70" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="605" y="192" font-family="Arial" font-size="22" text-anchor="middle" fill="#5b21b6">bibliography/</text>
+  <rect x="750" y="90" width="190" height="80" rx="16" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="845" y="126" font-family="Arial" font-size="24" text-anchor="middle" fill="#92400e">index.html</text>
+  <text x="845" y="150" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">build-manifest.json</text>
+  <path d="M220 130 H270" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M220 130 H270" transform="translate(0, 55)" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M460 75 H510" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M460 185 H510" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M700 75 H750" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M700 185 H750" stroke="#64748b" stroke-width="3" fill="none"/>
+</svg>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="kicker">Repository Overview</p>
+      <div class="hero">
+        <div>
+          <h1>AchillesCopilotBasicSkills Documentation</h1>
+          <p>This repository provides the baseline self-contained skill catalog for Achilles-oriented projects. The catalog is intentionally split between repository bootstrap skills, runtime convention skills, and skill-family construction guides that can bootstrap further skill types without coupling the runtime to external project code.</p>
+          <p class="note">Use <a href="specsLoader.html?spec=matrix.md">the generated specification matrix</a> when changing repository rules. The DS set is the authoritative layer, while the HTML pages explain how those rules map to the current codebase and its portable skill folders.</p>
+        </div>
+        <img src="assets/skill-map.svg" alt="Repository skill map" />
+      </div>
+
+      <h2>Repository Model</h2>
+      <p>This repository is not a deployable production runtime. Its purpose is to hold portable skill folders, example code that lives inside those folders, documentation, and validation tests. In downstream projects, the expected usage model is to copy the relevant folders under a local <code>skills/</code> directory, often ignored by Git, and use them there without depending on repository-level source modules from this repository.</p>
+
+      <h2>Current Skill Catalog</h2>
+      <table class="skill-table">
+        <thead>
+          <tr>
+            <th>Skill</th>
+            <th>Role</th>
+            <th>Portable local code</th>
+            <th>Documentation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>gamp_specs</code></td>
+            <td>Project bootstrap, agent guidance, DS policy, matrix generation, and HTML documentation structure.</td>
+            <td><code>examples/skillCatalog.mjs</code>, docs scripts, specs loader asset, file size checker asset.</td>
+            <td><a href="gamp_specs.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>achilles_specs</code></td>
+            <td>AchillesAgentLib integration, runtime configuration, and LLM conventions.</td>
+            <td><code>examples/depsLoader.mjs</code>, <code>examples/runtimeConfig.mjs</code>.</td>
+            <td><a href="achilles_specs.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>article_build</code></td>
+            <td>Self-contained article rebuilding, SVG validation, bibliography verification, and HTML emission.</td>
+            <td>Executable build modules and validators fully inside the skill folder.</td>
+            <td><a href="article_build.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>cskill_build</code></td>
+            <td>Specification-driven executable skill conventions.</td>
+            <td>Descriptor and DS guidance only.</td>
+            <td><a href="cskill_build.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>dgskill_build</code></td>
+            <td>Dynamic code generation skill conventions.</td>
+            <td>Descriptor and DS guidance only.</td>
+            <td><a href="dgskill_build.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>oskill_build</code></td>
+            <td>Declarative orchestration skill conventions.</td>
+            <td>Descriptor and DS guidance only.</td>
+            <td><a href="oskill_build.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>antropic_skill_build</code></td>
+            <td>Portable Anthropic-style self-containment baseline.</td>
+            <td>Descriptor and DS guidance only.</td>
+            <td><a href="antropic_skill_build.html">Skill page</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Repository Conventions</h2>
+      <div class="summary-grid">
+        <section class="summary-card">
+          <h3>No shared production src tree</h3>
+          <p>This repository intentionally avoids a root <code>src/</code> runtime. Example code is stored inside the relevant skill folders so copied skills remain self-contained in downstream projects.</p>
+        </section>
+        <section class="summary-card">
+          <h3>Tests are validation artifacts</h3>
+          <p><code>tests/&lt;skill-name&gt;/</code> validates example code and scripts in this repository. Those tests are not deployment artifacts for downstream projects.</p>
+        </section>
+        <section class="summary-card">
+          <h3>Coding style authority</h3>
+          <p><a href="specsLoader.html?spec=DS001-coding-style.md">DS001-coding-style.md</a> defines modularity, file-size guidance, line-length expectations, and the use of <code>fileSizesCheck.sh</code>.</p>
+        </section>
+      </div>
+
+      <h2>Documentation and Validation Flow</h2>
+      <p>The specification matrix is generated from DS frontmatter metadata rather than handwritten list items. Documentation work is expected to run <code>npm run docs:matrix</code> and <code>npm run docs:verify-links</code>, or the combined <code>npm run docs:check</code>, so that the matrix and the local HTML links stay synchronized with the actual files.</p>
+
+      <h2>Navigation</h2>
+      <ul class="link-list">
+        <li><a href="specsLoader.html?spec=matrix.md">Open the generated specification matrix</a></li>
+        <li><a href="specsLoader.html?spec=DS001-coding-style.md">Open the coding-style authority</a></li>
+        <li><a href="specsLoader.html?spec=DS003-gamp-specs.md">Open the GAMP bootstrap contract</a></li>
+        <li><a href="specsLoader.html?spec=decisions.md">Open the decisions log</a></li>
+      </ul>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">Home</a> / oskill_build</p>
+      <p class="kicker">Skill Detail</p>
+      <h1>oskill_build</h1>
+      <p><code>oskill_build</code> defines the declarative orchestration layer for skills that coordinate downstream capabilities. It makes preparation, instruction flow, allowed skills, and session type explicit in the descriptor.</p>
+      <table class="meta-table">
+        <tr><th>Depends on</th><td><code>gamp_specs</code>, <code>achilles_specs</code></td></tr>
+        <tr><th>Primary artifact</th><td><code>oskill.md</code></td></tr>
+        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS008-oskill-build.md">DS008-oskill-build.md</a></td></tr>
+      </table>
+      <h2>Design Position</h2>
+      <p>This family improves auditability because the planner's toolbelt is explicit. The repository therefore treats the descriptor structure itself as an important architectural surface rather than merely a convenience for prompt authorship.</p>
+      <h2>Portability</h2>
+      <p>O-Skill guidance is maintained as portable descriptor policy. Any executable planning helpers intended for reuse should remain local to the skill folder so copied skills stay coherent outside this repository.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

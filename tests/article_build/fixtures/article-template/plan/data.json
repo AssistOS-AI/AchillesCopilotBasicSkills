@@ -1,0 +1,15 @@
+{
+  "runtime": {
+    "name": "self-contained article build pipeline"
+  },
+  "components": [
+    {
+      "name": "plan_ch1.md",
+      "role": "Source chapter intent"
+    },
+    {
+      "name": "build-manifest.json",
+      "role": "Generated status output"
+    }
+  ]
+}

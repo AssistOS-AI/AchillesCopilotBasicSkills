@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" role="img" aria-labelledby="title desc">
+  <title id="title">LLM model tier strategy</title>
+  <desc id="desc">Diagram showing fast, standard, and premium model tiers and the task tags mapped to them.</desc>
+  <rect width="900" height="320" fill="#f8fbff"/>
+  <rect x="70" y="80" width="220" height="90" rx="16" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="180" y="120" font-family="Arial" font-size="28" text-anchor="middle" fill="#1e3a8a">Fast</text>
+  <text x="180" y="148" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Bootstrap checks</text>
+  <text x="180" y="170" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Testing utilities</text>
+  <rect x="340" y="60" width="220" height="120" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="450" y="104" font-family="Arial" font-size="28" text-anchor="middle" fill="#0c4a6e">Standard</text>
+  <text x="450" y="132" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Documentation</text>
+  <text x="450" y="154" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Specification work</text>
+  <rect x="610" y="80" width="220" height="90" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="720" y="120" font-family="Arial" font-size="28" text-anchor="middle" fill="#5b21b6">Premium</text>
+  <text x="720" y="148" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Complex orchestration</text>
+  <text x="720" y="170" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">High-risk reasoning</text>
+  <path d="M290 125 H340" stroke="#64748b" stroke-width="3" fill="none"/>
+  <path d="M560 125 H610" stroke="#64748b" stroke-width="3" fill="none"/>
+  <text x="180" y="230" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">Tag examples:</text>
+  <text x="180" y="254" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">project-bootstrap, testing</text>
+  <text x="450" y="230" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">Tag examples:</text>
+  <text x="450" y="254" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">documentation, specification</text>
+  <text x="720" y="230" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">Tag examples:</text>
+  <text x="720" y="254" font-family="Arial" font-size="16" text-anchor="middle" fill="#475569">orchestration, high-risk</text>
+</svg>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">Home</a> / dgskill_build</p>
+      <p class="kicker">Skill Detail</p>
+      <h1>dgskill_build</h1>
+      <p><code>dgskill_build</code> defines the dynamic end of the skill spectrum. It is intended for guarded direct-answer or generated-code workflows where adaptability matters more than durable specification-driven implementation.</p>
+      <table class="meta-table">
+        <tr><th>Depends on</th><td><code>gamp_specs</code>, <code>achilles_specs</code></td></tr>
+        <tr><th>Primary artifact</th><td><code>dgskill.md</code></td></tr>
+        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS007-dgskill-build.md">DS007-dgskill-build.md</a></td></tr>
+      </table>
+      <h2>Design Position</h2>
+      <p>This skill family keeps sandbox policy, prompt guidance, and output normalization explicit. The repository documentation treats these guardrails as first-class design elements rather than incidental implementation notes.</p>
+      <h2>Portability</h2>
+      <p>DGSkill guidance is documented here as a portable skill contract. Downstream projects are expected to copy the skill folder into their own local <code>skills/</code> directory rather than depending on this repository as a shared runtime package.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

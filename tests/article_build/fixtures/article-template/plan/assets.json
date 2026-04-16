@@ -1,0 +1,12 @@
+{
+  "assets": [
+    {
+      "id": "pipeline-diagram",
+      "source": "source-figure.svg",
+      "output": "assets/diagram.svg",
+      "validation": {
+        "type": "generic"
+      }
+    }
+  ]
+}

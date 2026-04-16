@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">Home</a> / article_build</p>
+      <p class="kicker">Skill Detail</p>
+      <h1>article_build</h1>
+      <p><code>article_build</code> is the main executable skill currently present in the repository. It reads article-owned planning material, resolves generated chapter templates, verifies bibliography support, validates SVG assets, and emits the final HTML plus a build manifest without relying on repository-level helper modules.</p>
+      <img src="assets/article-build-pipeline.svg" alt="Article build pipeline" />
+      <table class="meta-table">
+        <tr><th>Depends on</th><td>None</td></tr>
+        <tr><th>Executable modules</th><td><code>skill.mjs</code>, <code>bibliography.mjs</code>, <code>referenceCatalog.mjs</code>, <code>renderHtml.mjs</code>, <code>svgValidation.mjs</code></td></tr>
+        <tr><th>Primary outputs</th><td><code>&lt;articleRoot&gt;/index.html</code>, <code>&lt;articleRoot&gt;/assets/</code>, <code>&lt;articleRoot&gt;/plan/build-manifest.json</code></td></tr>
+        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS005-article-build.md">DS005-article-build.md</a></td></tr>
+      </table>
+
+      <h2>Self-Containment</h2>
+      <p>The skill remains self-contained after the repository restructure. All executable logic used by the build stays inside <code>skills/article_build/</code>, and the repository no longer presents a competing shared <code>src/</code> layer that downstream copies would not carry.</p>
+
+      <h2>Validation Surface</h2>
+      <p>The skill enforces more than file copying. It validates SVG geometry, checks that citations are supportable from cached evidence, rebuilds incrementally, and keeps the final HTML aligned with article-owned plans rather than hardcoded repository assumptions. The current repository also reuses its SVG validator for documentation maintenance tasks.</p>
+
+      <h2>Relation to Tests</h2>
+      <p>The tests under <code>tests/article_build/</code> verify parsing, rendering, SVG validation, and deterministic rebuild behavior. They exist to validate the example and script code carried by the skill folder, not to define a deployment package for downstream projects.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

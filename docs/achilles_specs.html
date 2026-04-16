@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">Home</a> / achilles_specs</p>
+      <p class="kicker">Skill Detail</p>
+      <h1>achilles_specs</h1>
+      <p><code>achilles_specs</code> extends the bootstrap layer with AchillesAgentLib integration rules, runtime configuration defaults, and LLM usage conventions. In the current repository those behaviors are demonstrated through portable example modules stored inside the skill folder.</p>
+      <table class="meta-table">
+        <tr><th>Depends on</th><td><code>gamp_specs</code></td></tr>
+        <tr><th>Local artifacts</th><td><code>SKILL.md</code>, <code>DS.md</code>, <code>skill.json</code>, <code>examples/depsLoader.mjs</code>, <code>examples/runtimeConfig.mjs</code></td></tr>
+        <tr><th>Repository documentation hooks</th><td><code>AGENT.md</code>, <code>AGENTS.md</code>, <code>DS001-coding-style.md</code>, <code>DS002-llm-model-strategy.md</code></td></tr>
+        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS004-achilles-specs.md">DS004-achilles-specs.md</a></td></tr>
+      </table>
+
+      <h2>Portable Example Code</h2>
+      <p>The repository no longer treats <code>src/</code> as the location for Achilles helper code. The dependency resolver and runtime configuration example now live in <code>skills/achilles_specs/examples/</code>, which means a copied skill folder still carries the implementation examples that its descriptor and documentation discuss.</p>
+
+      <h2>Runtime Rules</h2>
+      <p>The example dependency loader resolves AchillesAgentLib from the parent directory before consulting <code>node_modules</code>. The runtime configuration example adds manual override support for provider settings, model tiers, and task tags. These are example implementations for downstream projects, not a runtime distributed from this repository root.</p>
+
+      <h2>Relation to Tests</h2>
+      <p>The tests under <code>tests/achilles_specs/</code> verify these example modules and their behavior. They exist to keep the repository honest and to prevent documentation drift, but they are not deployment artifacts for projects that merely copy the skill folder.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

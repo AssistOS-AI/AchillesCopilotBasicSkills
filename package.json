@@ -1,0 +1,11 @@
+{
+  "name": "achilles-copilot-basic-skills",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "docs:matrix": "node skills/gamp_specs/scripts/generate_specs_matrix.mjs",
+    "docs:verify-links": "node skills/gamp_specs/scripts/verify_docs_links.mjs",
+    "docs:check": "npm run docs:matrix && npm run docs:verify-links",
+    "test": "node --test"
+  }
+}
