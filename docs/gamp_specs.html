@@ -17,12 +17,12 @@
       <table class="meta-table">
         <tr><th>Local artifacts</th><td><code>SKILL.md</code>, <code>DS.md</code>, <code>skill.json</code>, <code>examples/skillCatalog.mjs</code>, <code>references/</code>, <code>assets/specsLoader.html</code>, <code>assets/fileSizesCheck.sh</code>, <code>scripts/generate_specs_matrix.mjs</code>, <code>scripts/verify_docs_links.mjs</code>, <code>scripts/verify_static_site.js</code></td></tr>
         <tr><th>Depends on</th><td>None</td></tr>
-        <tr><th>Repository outputs</th><td><code>AGENT.md</code>, <code>AGENTS.md</code>, <code>README.md</code>, <code>docs/</code>, <code>docs/specs/</code>, <code>fileSizesCheck.sh</code></td></tr>
+        <tr><th>Repository outputs</th><td><code>AGENTS.md</code>, <code>README.md</code>, <code>docs/</code>, <code>docs/specs/</code>, <code>fileSizesCheck.sh</code></td></tr>
         <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS003-gamp-specs.md">DS003-gamp-specs.md</a></td></tr>
       </table>
 
       <h2>Operational Role</h2>
-      <p>This skill defines the bootstrap contract for repository layout and documentation behavior. It specifies how agent guidance is written, how DS files are numbered and generated, how the matrix is derived from DS metadata, how link verification is run, and how `DS001-coding-style.md` is treated as the coding-style authority.</p>
+      <p>This skill defines the bootstrap contract for repository layout and documentation behavior. It specifies how `AGENTS.md` is written, how DS files are numbered and generated, how the matrix is derived from DS metadata, how link verification is run, and how `DS001-coding-style.md` is treated as the coding-style authority.</p>
 
       <h2>Portability Model</h2>
       <p>The skill now assumes that portable example code stays inside skill folders. The example catalog reader therefore lives in <code>skills/gamp_specs/examples/skillCatalog.mjs</code> rather than a repository-level <code>src/</code> tree. This keeps the skill usable when copied into another project's local <code>skills/</code> folder.</p>

@@ -10,7 +10,7 @@ summary: Defines repository-wide coding style, file layout, modular test organiz
 
 ## Introduction
 
-This specification defines the repository-wide implementation and documentation policy. It is the coding-style authority referenced by `AGENT.md`, `AGENTS.md`, and the skill descriptors, and it covers source-code defaults, dependency policy, file layout, test organization, readability constraints, and the Achilles-specific runtime conventions that apply to all work in this repository.
+This specification defines the repository-wide implementation and documentation policy. It is the coding-style authority referenced by `AGENTS.md` and the skill descriptors, and it covers source-code defaults, dependency policy, file layout, test organization, readability constraints, and the Achilles-specific runtime conventions that apply to all work in this repository.
 
 ## Core Content
 
@@ -24,7 +24,7 @@ The script must be run periodically during maintenance and after larger document
 
 AchillesAgentLib is authorized for this repository. The portable example resolver lives in `skills/achilles_specs/examples/depsLoader.mjs` and must attempt parent-directory resolution first and fall back to `node_modules`. Runtime configuration examples live alongside it in the same skill folder and must support manual overrides in addition to environment-based defaults. All LLM interactions must use the `LLMAgent` class through shared runtime configuration.
 
-Documentation must remain synchronized across `AGENT.md`, `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers.
+Documentation must remain synchronized across `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers.
 
 ## Conclusion
 

@@ -1,7 +1,7 @@
 {
   "title": "GAMP Specs",
   "family": "anthropic",
-  "summary": "Bootstraps AGENT guidance, DS specifications, HTML documentation, and repository-wide documentation synchronization rules.",
+  "summary": "Bootstraps AGENTS guidance, DS specifications, HTML documentation, and repository-wide documentation synchronization rules.",
   "aliases": [
     "gamp-structure",
     "docs-builder",
@@ -9,7 +9,6 @@
   ],
   "dependsOn": [],
   "outputs": [
-    "AGENT.md",
     "AGENTS.md",
     "fileSizesCheck.sh",
     "docs/index.html",

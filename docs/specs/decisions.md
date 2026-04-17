@@ -9,7 +9,7 @@ This file records architectural interpretations and naming choices that affect h
 ### 2026-04 Baseline bootstrap
 
 1. The former `skills/gamp-structure/` material was merged into `skills/gamp_specs/` so the repository keeps the prior scripts, references, and specs-loader asset while aligning the skill name with the canonical skill catalog.
-2. The repository keeps both `AGENT.md` and `AGENTS.md` because the user explicitly requested `AGENT.md` while the inherited bootstrap material already referenced `AGENTS.md`. The two files are therefore treated as synchronized compatibility twins.
+2. The repository standardizes on `AGENTS.md` as the single root guidance file because it is the clearer ecosystem convention for reusable agent instructions and avoids drift between duplicate compatibility copies.
 3. Canonical repository skill identifiers use underscore-based folder names such as `gamp_specs` and `article_build`, while legacy names are preserved as aliases inside `skill.json` metadata when needed.
 4. Documentation synchronization is enforced at the repository level: adding a skill now requires updates to the agent guidance, README, HTML pages, and DS matrix in the same revision.
 

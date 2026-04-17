@@ -6,7 +6,7 @@ This skill is the repository bootstrap authority for documentation layout, agent
 
 ## Core Content
 
-The skill owns the repository rules that tie `AGENT.md`, `AGENTS.md`, `docs/`, and `docs/specs/` together. It defines the mandatory three-digit DS naming convention, the requirement to keep the DS sequence contiguous with no skipped numbers, the requirement to keep all persistent content in English, the use of SVG diagrams under `docs/assets/`, and the obligation to maintain `docs/specs/decisions.md`. It also defines the repository-level maintenance rule that when new skills are added, the agent guidance, the generated DS matrix, the coding-style pointers, and the HTML documentation must all be updated in the same change set. Repository-wide example code is kept inside skill folders rather than in a shared root `src/` tree.
+The skill owns the repository rules that tie `AGENTS.md`, `docs/`, and `docs/specs/` together. It defines the mandatory three-digit DS naming convention, the requirement to keep the DS sequence contiguous with no skipped numbers, the requirement to keep all persistent content in English, the use of SVG diagrams under `docs/assets/`, and the obligation to maintain `docs/specs/decisions.md`. It also defines the repository-level maintenance rule that when new skills are added, the agent guidance, the generated DS matrix, the coding-style pointers, and the HTML documentation must all be updated in the same change set. Repository-wide example code is kept inside skill folders rather than in a shared root `src/` tree.
 
 ## Conclusion
 

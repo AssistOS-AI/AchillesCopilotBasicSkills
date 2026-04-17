@@ -1,6 +1,6 @@
 ---
 name: gamp_specs
-description: Rebuild or initialize a software project into the standard `AGENT.md` + `AGENTS.md` + `docs/` + `docs/specs/` layout with contiguous DS numbering, explicit coding-style authority, detailed HTML documentation, and a synchronized skill catalog.
+description: Rebuild or initialize a software project into the standard `AGENTS.md` + `docs/` + `docs/specs/` layout with contiguous DS numbering, explicit coding-style authority, detailed HTML documentation, and a synchronized skill catalog.
 ---
 
 # GAMP Specs
@@ -15,11 +15,11 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 
 ### 1. Discover Source Material
 
-- Read `AGENT.md`, `AGENTS.md`, `README.md`, and any existing `docs/` content.
+- Read `AGENTS.md`, `README.md`, and any existing `docs/` content.
 - Read the source code in the same manner you normally do when asked to analyze a project: scan the tree, inspect entry points, follow key dependencies, and review the current skill folders.
 - Verify every substantive technical claim against the implementation before documenting it.
 - Extract required narrative, constraints, and terminology from those sources.
-- Keep all written output in English, including HTML documentation, specs, `AGENT.md`, and `AGENTS.md`.
+- Keep all written output in English, including HTML documentation, specs, and `AGENTS.md`.
 
 ### 2. Apply the Standard Structure
 
@@ -31,7 +31,7 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Create one DS file for each current skill in the repository, plus any additional DS files needed for shared architectural topics such as model strategy.
 - Keep the DS sequence contiguous with no missing intermediate numbers. If the repository uses `DS000` through `DS009`, the next new DS must be `DS010`.
 - Ensure the DS files are reachable from `matrix.md`, and link each DS entry through `/specsLoader.html?spec=DS0xx-description.md`.
-- Treat `DS001-coding-style.md` as the coding-style authority and make `AGENT.md` and `AGENTS.md` point to it explicitly.
+- Treat `DS001-coding-style.md` as the coding-style authority and make `AGENTS.md` point to it explicitly.
 - Keep the HTML documentation workflow and the DS specification workflow distinct.
 - Treat the DS specifications as the source of truth for documented behavior and structure.
 - When code changes alter behavior, interfaces, architecture, workflows, or constraints, update both the HTML documentation and the DS specifications to match the implementation.
@@ -42,7 +42,7 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 
 - Update or create the required HTML pages and shared assets.
 - Keep SVG files and any other documentation assets separate from the HTML files under `docs/assets/`.
-- Keep the narrative consistent with the project’s role and interfaces, especially any agent or system responsibilities described in `AGENT.md` and `AGENTS.md`.
+- Keep the narrative consistent with the project’s role and interfaces, especially any agent or system responsibilities described in `AGENTS.md`.
 - Review the actual contents of each skill folder and document the local artifacts, dependencies, conventions, and responsibilities instead of relying on shallow summaries.
 - Follow `references/technical-docs-guidelines.md`.
 - Choose one primary navigation model for the HTML documentation shell: a sidebar or a header navigation bar. Do not use both as parallel primary navigation systems in the same documentation set unless one is clearly secondary and non-redundant.
@@ -50,17 +50,18 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Ensure the HTML documentation reflects the current source code and remains aligned with the DS specifications.
 - Provide one HTML page per skill and an index page that explains how the skill set fits together, where the coding style is defined, and how tests are organized.
 
-### 4. Create or Update `AGENT.md` and `AGENTS.md`
+### 4. Create or Update `AGENTS.md`
 
-- Create `./AGENT.md` if it does not exist; otherwise update it.
-- Create or refresh `./AGENTS.md` as the compatibility twin of `AGENT.md`.
-- Write the paths to the HTML documentation entry points and the specifications directory in both files.
+- Create `./AGENTS.md` if it does not exist; otherwise update it.
+- Do not create `./AGENT.md` or any other compatibility duplicate.
+- Write the paths to the HTML documentation entry points and the specifications directory in `AGENTS.md`.
+- Use a clear section template in this order: `Scope`, `Mandatory Reading Order`, `Current Skill Catalog`, `Repository Rules`, `Runtime Defaults`, and `Key Paths`.
 - Instruct future agents to read `DS001-coding-style.md` for coding style, module structure, and test-organization rules.
 - Instruct future agents to read the HTML documentation and the relevant per-skill DS files before making documentation-related changes.
 - State explicitly that the DS specifications are the source of truth.
 - State explicitly that when source code changes, the HTML documentation and the specifications must both be updated to reflect the change.
 - State explicitly that all documentation, specifications, and comments must be written in English.
-- State explicitly that both files must mention the currently available skills and must be updated whenever new skill folders are added.
+- State explicitly that `AGENTS.md` must mention the currently available skills and must be updated whenever new skill folders are added.
 - State explicitly that the GAMP skill itself must be updated when new skill families, coding-style rules, or project bootstrap rules are introduced.
 - State explicitly that DS numbering must remain gap-free.
 
@@ -94,8 +95,8 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Ensure every spec file follows the `DS0xx-description.md` convention, includes `Introduction`, `Core Content`, and `Conclusion`, and fits into a contiguous numbering sequence.
 - Confirm the specs matrix links correctly via `specsLoader.html?spec=matrix.md`.
 - Confirm each DS entry in `matrix.md` uses the specs-loader path format `/specsLoader.html?spec=DS0xx-description.md`.
-- Confirm `AGENT.md` and `AGENTS.md` point to the correct HTML documentation paths, the correct specs path, and `DS001-coding-style.md`.
-- Confirm `AGENT.md`, `AGENTS.md`, `docs/index.html`, and `docs/specs/matrix.md` all mention the current skill set consistently.
+- Confirm `AGENTS.md` points to the correct HTML documentation paths, the correct specs path, and `DS001-coding-style.md`.
+- Confirm `AGENTS.md`, `docs/index.html`, and `docs/specs/matrix.md` all mention the current skill set consistently.
 - Confirm the HTML documentation and specs are synchronized with the implementation, with specs kept authoritative if wording diverges.
 
 ## Resources

@@ -1,6 +1,6 @@
 # AchillesCopilotBasicSkills
 
-This repository is the baseline skill catalog for Achilles-oriented projects that use self-contained Anthropic-style skills. It combines repository bootstrap guidance, Achilles runtime conventions, skill-family construction rules, and a self-contained article build skill with tests and documentation that are expected to evolve together.
+This repository is the standardized, reusable baseline skill catalog for the team and for downstream projects that use Achilles, our libraries, and our technologies. It combines repository bootstrap guidance, runtime conventions, skill-family construction rules, and self-contained workflow skills with tests and documentation that are expected to evolve together.
 
 ## Repository Structure
 
@@ -27,8 +27,8 @@ This repository is the baseline skill catalog for Achilles-oriented projects tha
 - LLM routing and model tiers: `docs/specsLoader.html?spec=DS002-llm-model-strategy.md`
 - Full specification matrix: `docs/specsLoader.html?spec=matrix.md`
 - Decision log: `docs/specs/decisions.md`
-- Agent guidance: `AGENT.md` and `AGENTS.md`
+- Agent guidance: `AGENTS.md`
 
 ## Maintenance Rule
 
-Whenever a new skill is added or renamed, update the skill catalog, the agent guidance, the HTML documentation, and the DS matrix in the same change set. DS numbering must remain contiguous and gap-free.
+Whenever a new skill is added or renamed, update the skill catalog, `AGENTS.md`, the HTML documentation, and the DS matrix in the same change set. DS numbering must remain contiguous and gap-free.

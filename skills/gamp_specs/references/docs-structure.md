@@ -1,10 +1,9 @@
 # Documentation Structure Requirements
 
-This skill enforces a standard documentation layout rooted in `AGENT.md`, `AGENTS.md`, and `docs/`. The goal is to normalize existing documentation into a consistent, navigable structure aligned with the HAP framework and the repository skill catalog.
+This skill enforces a standard documentation layout rooted in `AGENTS.md` and `docs/`. The goal is to normalize existing documentation into a consistent, navigable structure aligned with the HAP framework and the repository skill catalog.
 
 ## Required Layout
 
-- `AGENT.md`
 - `AGENTS.md`
 - `fileSizesCheck.sh`
 - `docs/index.html`
@@ -17,6 +16,8 @@ This skill enforces a standard documentation layout rooted in `AGENT.md`, `AGENT
 - `docs/specs/matrix.md` generated from DS metadata
 - `docs/specs/decisions.md` for design and interpretation decisions
 - `docs/specsLoader.html` copied from the skill asset
+
+`AGENTS.md` is the single root guidance file. Its standard section layout is: `Scope`, `Mandatory Reading Order`, `Current Skill Catalog`, `Repository Rules`, `Runtime Defaults`, and `Key Paths`.
 
 ## HTML Pages
 
@@ -51,5 +52,5 @@ This skill enforces a standard documentation layout rooted in `AGENT.md`, `AGENT
 
 - The HTML docs must describe the system in operational terms: components, responsibilities, interfaces, runtime behaviors, current skills, and current conventions.
 - The HTML docs must make clear when repository code is example code carried by a skill folder rather than a shared production runtime.
-- Preserve any system narrative or agent-role requirements found in `AGENT.md`, `AGENTS.md`, or existing docs.
+- Preserve any system narrative or agent-role requirements found in `AGENTS.md` or existing docs.
 - Whenever new skills are added to the repository, the agent guidance, the HTML documentation, and the DS matrix must be updated in the same change set.

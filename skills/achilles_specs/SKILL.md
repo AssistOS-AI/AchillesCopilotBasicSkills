@@ -11,7 +11,7 @@ Use this skill when a project must adopt AchillesAgentLib conventions, runtime w
 
 ## Directives
 
-1. Authorize the use of AchillesAgentLib and document that authorization in `AGENT.md`, `AGENTS.md`, and `DS001-coding-style.md`.
+1. Authorize the use of AchillesAgentLib and document that authorization in `AGENTS.md` and `DS001-coding-style.md`.
 2. Keep the example dependency resolver inside this skill folder, for example `examples/depsLoader.mjs`, so the skill remains portable when copied into another project's `skills/` directory.
 3. Define a manual override mechanism for core runtime configuration so repository code can override environment-based defaults.
 4. Require all LLM interactions to use the `LLMAgent` class configured through runtime configuration and environment variables.
