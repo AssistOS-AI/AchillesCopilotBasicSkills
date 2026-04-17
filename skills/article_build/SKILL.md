@@ -1,3 +1,4 @@
+---
 name: article_build
 description: Refresh a research article rooted at an article folder that contains `index.html`, `assets/`, and `plan/`. Rebuild generated chapters, copy and validate SVG assets, verify bibliography support, and regenerate the final HTML incrementally from article-owned plans and sources, using only resources contained inside this skill folder.
 ---
