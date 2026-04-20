@@ -68,6 +68,7 @@ Write for human readers. Explain what exists, why it exists, and how it behaves 
 - If a page links to the specs area, route that navigation to `matrix.md` through `docs/specsLoader.html?spec=matrix.md` or an equivalent valid specs entry flow.
 - Ensure readers can reach each DS file from `matrix.md`.
 - When documentation discusses coding style or test organization, point readers explicitly to `DS001-coding-style.md`.
+- When documenting a downstream project that merely consumes imported skills, keep `docs/` focused on the host project and avoid standalone pages about those imported skills. Keep skill-specific agent guidance inside the copied skill folders instead.
 - When explaining a runtime flow or generation pipeline, prefer a compact visual diagram over an ASCII block in `<pre><code>` when the diagram improves clarity.
 - Keep diagrams technically exact, visually restrained, and readable on mobile.
 - Store SVG diagrams and any other documentation assets in `docs/assets/` instead of embedding the asset payload directly in HTML files.

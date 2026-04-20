@@ -26,6 +26,7 @@ Use this skill when a capability is primarily a coordinator rather than a domain
 - Make preparation context loading separate from the main execution loop.
 - Preserve auditability by exposing planner constraints in the descriptor rather than burying them in freeform prose.
 - Keep coding-style, file-layout, and test-organization rules aligned with `DS001-coding-style.md`.
+- Keep `Core Content` focused on orchestration limits, general control flow, invariants, and special cases, and use numbered `Decisions & Questions` subchapters for rationale or unresolved planning choices.
 
 ## Constraints
 
@@ -33,3 +34,4 @@ Use this skill when a capability is primarily a coordinator rather than a domain
 - Keep persistent guidance in English.
 - Align repository-level bootstrap and coding rules with `gamp_specs` and `achilles_specs`.
 - Preserve the descriptor sections during restructures; omitting allowed-skills or session-type detail is a contract loss.
+- In downstream projects, keep imported O-Skill family guidance inside the copied skill folder rather than in the host project's `/docs` tree.

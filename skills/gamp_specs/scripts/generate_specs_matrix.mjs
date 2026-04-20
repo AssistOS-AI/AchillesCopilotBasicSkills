@@ -115,8 +115,6 @@ Generated from DS frontmatter by \`skills/gamp_specs/scripts/generate_specs_matr
 | Specification | Title | Status | Owner | Summary |
 | --- | --- | --- | --- | --- |
 ${rows}
-
-| [Decision Log](specsLoader.html?spec=decisions.md) | Repository decisions | [[status:implemented]] | repository | Architectural interpretations, naming choices, DS renumbering decisions, and high-risk changes. |
 `;
 }
 

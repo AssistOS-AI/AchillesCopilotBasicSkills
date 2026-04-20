@@ -21,8 +21,9 @@
       </table>
       <h2>Design Position</h2>
       <p>This skill family keeps sandbox policy, prompt guidance, and output normalization explicit. The repository documentation treats these guardrails as first-class design elements rather than incidental implementation notes.</p>
+      <p>The contract backbone belongs in <code>Core Content</code>, while detailed reasoning and open tradeoffs belong in numbered <code>Decisions &amp; Questions</code> entries. That split is especially important here because execution guardrails and temporary code paths change at different rates.</p>
       <h2>Portability</h2>
-      <p>DGSkill guidance is documented here as a portable skill contract. Downstream projects are expected to copy the skill folder into their own local <code>skills/</code> directory rather than depending on this repository as a shared runtime package.</p>
+      <p>DGSkill guidance is documented here as a portable skill contract. Downstream projects are expected to copy the skill folder into their own local <code>skills/</code> directory rather than depending on this repository as a shared runtime package, and they should not mirror this imported family guidance under their own <code>docs/</code> tree.</p>
     </div>
   </main>
   <div data-include="partials/footer.html"></div>

@@ -24,8 +24,14 @@ The script must be run periodically during maintenance and after larger document
 
 AchillesAgentLib is authorized for this repository. The portable example resolver lives in `skills/achilles_specs/examples/depsLoader.mjs` and must attempt parent-directory resolution first and fall back to `node_modules`. Runtime configuration examples live alongside it in the same skill folder and must support manual overrides in addition to environment-based defaults. All LLM interactions must use the `LLMAgent` class through shared runtime configuration.
 
-Documentation must remain synchronized across `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers.
+Documentation must remain synchronized across `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers. Ordinary DS files must use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and the `Decisions & Questions` section must use numbered question subchapters such as `### Question #1: ...`. In downstream projects that consume imported skills from this catalog, the host project's `docs/` and `docs/specs/` trees must stay focused on the host project rather than duplicating imported-skill DS files or skill pages.
+
+## Decisions & Questions
+
+### Question #1: Why should downstream projects keep imported-skill documentation out of the host project's `docs/` tree?
+
+Response: The copied skills are agent-facing tooling, not part of the host project's primary source and documentation surface. Duplicating their DS material inside the host project's documentation creates drift, encourages stale copies, and blurs the boundary between project architecture and reusable agent tooling. The host project should document how it uses the skills only where that usage affects the host system, while the skill-specific contract remains with the copied skill folder and the catalog repository.
 
 ## Conclusion
 
-Future code changes must preserve these defaults unless a new authoritative decision is recorded in `docs/specs/decisions.md`. Deviations from the runtime, size, readability, or documentation policy require synchronized DS and agent-guidance updates.
+Future code changes must preserve these defaults unless the affected DS files are updated with the new authoritative rationale. Deviations from the runtime, size, readability, or documentation policy require synchronized DS and agent-guidance updates.

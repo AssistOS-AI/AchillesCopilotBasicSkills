@@ -16,7 +16,13 @@ This specification defines the portability baseline for standardized Anthropic-s
 
 Each Anthropic-style skill must remain fully self-contained inside its own folder. Descriptors, references, templates, helper modules, and local assets must live within the skill directory. Repository-level conventions from `gamp_specs` and `achilles_specs` govern authoring and documentation, but the runtime behavior of a skill must not depend on importing arbitrary modules from the host project's `src/` tree.
 
-The repository must also keep the skill catalog synchronized when new Anthropic-style skills are added. The addition of a new skill therefore requires synchronized updates to agent guidance, HTML documentation, the DS matrix, and any affected bootstrap rules. Per-skill documentation must preserve local artifact detail rather than flattening the skill into a shallow description.
+The repository must also keep the skill catalog synchronized when new Anthropic-style skills are added. The addition of a new skill therefore requires synchronized updates to agent guidance, HTML documentation, the DS matrix, and any affected bootstrap rules. Per-skill documentation must preserve local artifact detail rather than flattening the skill into a shallow description. In downstream projects that copy these skills, "locally documented" means documented inside the skill folder or only insofar as the host project genuinely depends on the behavior. The host project's `docs/` tree must not mirror the imported skill catalog as a parallel documentation surface.
+
+## Decisions & Questions
+
+### Question #1: Why is local skill documentation preferred over duplicating skill pages and DS files inside downstream-project documentation?
+
+Response: Portability depends on keeping the skill's contract, helpers, and explanation together. If consumer repositories copy the skill but then document it separately under their own `docs/` trees, the authoritative location becomes unclear and the documentation drifts. Local skill documentation keeps the unit self-contained while letting the host project document only the integration points that actually belong to the host system.
 
 ## Conclusion
 

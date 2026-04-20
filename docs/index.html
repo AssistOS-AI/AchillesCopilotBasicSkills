@@ -22,6 +22,7 @@
 
       <h2>Repository Model</h2>
       <p>This repository is not a deployable production runtime. Its purpose is to hold portable skill folders, example code that lives inside those folders, documentation, and validation tests. In downstream projects, the expected usage model is to copy the relevant folders under a local <code>skills/</code> directory, often ignored by Git, and use them there without depending on repository-level source modules from this repository.</p>
+      <p>This repository documents the skill catalog because that is its own subject matter. A downstream project that merely consumes these skills should keep its <code>docs/</code> tree focused on the host project and should not add DS files or HTML pages there whose topic is the imported skills; any skill-local notes should remain inside the copied skill folders.</p>
 
       <h2>Current Skill Catalog</h2>
       <table class="skill-table">
@@ -51,6 +52,12 @@
             <td>Self-contained article rebuilding, SVG validation, bibliography verification, and HTML emission.</td>
             <td>Executable build modules and validators fully inside the skill folder.</td>
             <td><a href="article_build.html">Skill page</a></td>
+          </tr>
+          <tr>
+            <td><code>review_specs</code></td>
+            <td>Step-by-step review workflow for reconciling affected DS files with new context, instructions, and observed issues.</td>
+            <td>Descriptor and DS guidance only.</td>
+            <td><a href="review_specs.html">Skill page</a></td>
           </tr>
           <tr>
             <td><code>cskill_build</code></td>
@@ -90,20 +97,23 @@
           <p><code>tests/&lt;skill-name&gt;/</code> validates example code and scripts in this repository. Those tests are not deployment artifacts for downstream projects.</p>
         </section>
         <section class="summary-card">
+          <h3>Downstream docs stay project-scoped</h3>
+          <p>Projects that copy these skills should document their own architecture under <code>docs/</code>. Imported skill contracts stay inside the skill folders rather than being duplicated as project DS files or skill pages.</p>
+        </section>
+        <section class="summary-card">
           <h3>Coding style authority</h3>
           <p><a href="specsLoader.html?spec=DS001-coding-style.md">DS001-coding-style.md</a> defines modularity, file-size guidance, line-length expectations, and the use of <code>fileSizesCheck.sh</code>.</p>
         </section>
       </div>
 
       <h2>Documentation and Validation Flow</h2>
-      <p>The specification matrix is generated from DS frontmatter metadata rather than handwritten list items. Documentation work is expected to run <code>npm run docs:matrix</code> and <code>npm run docs:verify-links</code>, or the combined <code>npm run docs:check</code>, so that the matrix and the local HTML links stay synchronized with the actual files.</p>
+      <p>The specification matrix is generated from DS frontmatter metadata rather than handwritten list items. Ordinary DS files use <code>Introduction</code>, <code>Core Content</code>, <code>Decisions &amp; Questions</code>, and <code>Conclusion</code>, with numbered question subchapters such as <code>### Question #1: ...</code> inside the rationale section. Documentation work is expected to run <code>npm run docs:matrix</code> and <code>npm run docs:verify-links</code>, or the combined <code>npm run docs:check</code>, so that the matrix and the local HTML links stay synchronized with the actual files.</p>
 
       <h2>Navigation</h2>
       <ul class="link-list">
         <li><a href="specsLoader.html?spec=matrix.md">Open the generated specification matrix</a></li>
         <li><a href="specsLoader.html?spec=DS001-coding-style.md">Open the coding-style authority</a></li>
         <li><a href="specsLoader.html?spec=DS003-gamp-specs.md">Open the GAMP bootstrap contract</a></li>
-        <li><a href="specsLoader.html?spec=decisions.md">Open the decisions log</a></li>
       </ul>
     </div>
   </main>

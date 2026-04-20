@@ -20,6 +20,12 @@ All LLM interactions must be routed through `LLMAgent` and exposed through share
 
 The exact provider names may vary by deployment, but the tier model must remain explicit and manually overridable. The repository example implementation therefore exposes default task tags and model tiers through `skills/achilles_specs/examples/runtimeConfig.mjs` instead of scattering them through ad hoc constants. Documentation and agent guidance must describe the existence of this tier model rather than assuming it can be rediscovered from code.
 
+## Decisions & Questions
+
+### Question #1: Why does the runtime keep explicit task tags and model tiers instead of treating model choice as an implicit implementation detail?
+
+Response: Task tags and tier labels expose routing intent at the contract layer, which makes the runtime auditable and overrideable. Without that structure, cost, latency, and reasoning depth would become accidental properties of scattered code paths. The explicit tier model keeps the routing surface stable even when providers or model names change.
+
 ## Conclusion
 
 Future runtime changes must preserve explicit task tags and an overridable model-tier structure. If the routing model becomes more complex, this specification must be revised in the same change set as the implementation.

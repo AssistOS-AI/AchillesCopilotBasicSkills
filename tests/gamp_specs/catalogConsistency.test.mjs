@@ -17,14 +17,20 @@ test('skill catalog matches the expected repository baseline', async () => {
     'cskill_build',
     'dgskill_build',
     'gamp_specs',
-    'oskill_build'
+    'oskill_build',
+    'review_specs'
   ]);
   assert.deepEqual(validateSkillCatalog(catalog), []);
+
+  for (const skill of catalog) {
+    assert.match(skill.descriptor, /^---\n/, `${skill.id} must start with valid frontmatter.`);
+  }
 });
 
 test('repository guidance mentions every skill and every skill page exists', async () => {
   const catalog = await readSkillCatalog(repoRoot);
   await assert.rejects(access(resolve(repoRoot, 'AGENT.md')), { code: 'ENOENT' });
+  await assert.rejects(access(resolve(repoRoot, 'docs/specs/decisions.md')), { code: 'ENOENT' });
 
   const [readme, agents, indexHtml, matrix, specsLoader, assetLoader, rootSizeCheck, assetSizeCheck] = await Promise.all([
     readFile(resolve(repoRoot, 'README.md'), 'utf8'),
@@ -40,6 +46,8 @@ test('repository guidance mentions every skill and every skill page exists', asy
   assert.equal(specsLoader, assetLoader);
   assert.equal(rootSizeCheck, assetSizeCheck);
   assert.doesNotMatch(agents, /Bootstrap utilities:\s*`src\/`/);
+  assert.doesNotMatch(readme, /docs\/specs\/decisions\.md/);
+  assert.doesNotMatch(agents, /docs\/specs\/decisions\.md/);
 
   for (const skill of catalog) {
     const skillPage = await readFile(resolve(repoRoot, 'docs', `${skill.id}.html`), 'utf8');

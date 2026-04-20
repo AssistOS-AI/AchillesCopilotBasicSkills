@@ -18,7 +18,13 @@ The skill must remain self-contained inside `skills/article_build/`. It must der
 
 ![Article build pipeline](../assets/article-build-pipeline.svg)
 
-The repository must preserve the existing module boundaries used by the skill: the build orchestrator, bibliography verification, reference catalog loading, HTML rendering, and SVG validation remain separate responsibilities. Host-project source modules under `src/` must not become runtime dependencies of this skill. The repository should continue using the skill's SVG validator when documentation diagrams are edited, because the same readability and containment concerns apply there as well.
+The repository must preserve the existing module boundaries used by the skill: the build orchestrator, bibliography verification, reference catalog loading, HTML rendering, and SVG validation remain separate responsibilities. Host-project source modules under `src/` must not become runtime dependencies of this skill. The repository should continue using the skill's SVG validator when documentation diagrams are edited, because the same readability and containment concerns apply there as well. Projects that use this skill may document their article pipeline as part of project behavior, but they should not create standalone DS files or skill pages under the host project's `docs/` tree whose subject is the imported `article_build` skill.
+
+## Decisions & Questions
+
+### Question #1: Why must `article_build` keep its execution model self-contained instead of depending on host-project modules?
+
+Response: The skill is intended to travel as a reusable build capability. If article generation depends on arbitrary host-project modules or host-project documentation structure, the copied skill stops being portable and becomes harder to audit. Keeping its module boundaries inside the skill folder makes rebuild behavior reproducible and keeps responsibility for article generation explicit.
 
 ## Conclusion
 

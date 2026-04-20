@@ -21,8 +21,9 @@
       </table>
       <h2>Design Position</h2>
       <p>This skill exists for capabilities that are too substantial for inline logic but still benefit from being generated from stable specifications. The descriptor carries the public contract, while the module-level specs define the deeper behavioral surface.</p>
+      <p>Under the current DS rules, <code>Core Content</code> should hold the general approach, boundaries, and invariants, while detailed rationale and unresolved alternatives belong in numbered <code>Decisions &amp; Questions</code> entries inside the relevant spec files.</p>
       <h2>Portability</h2>
-      <p>The repository treats this skill as portable guidance rather than a root-runtime feature. Any example code or templates for future C-Skills should therefore live inside the copied skill folder, not in a shared repository-level source directory.</p>
+      <p>The repository treats this skill as portable guidance rather than a root-runtime feature. Any example code or templates for future C-Skills should therefore live inside the copied skill folder, not in a shared repository-level source directory. Downstream projects should not duplicate the imported family guidance under their own <code>docs/</code> tree.</p>
     </div>
   </main>
   <div data-include="partials/footer.html"></div>

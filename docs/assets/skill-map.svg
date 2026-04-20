@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 500" role="img" aria-labelledby="title desc">
   <title id="title">Repository skill map</title>
-  <desc id="desc">Diagram showing repository bootstrap skills at the top and the reusable skill families arranged below them.</desc>
+  <desc id="desc">Diagram showing repository bootstrap and review skills at the top and the reusable skill families arranged below them.</desc>
   <rect width="960" height="500" fill="#f8fbff"/>
 
   <rect x="90" y="48" width="250" height="96" rx="18" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
@@ -14,6 +14,13 @@
   <text x="495" y="134" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">and LLM conventions</text>
 
   <path d="M340 96 H370" stroke="#475569" stroke-width="3" fill="none"/>
+
+  <rect x="660" y="48" width="250" height="96" rx="18" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+  <text x="785" y="88" font-family="Arial" font-size="26" text-anchor="middle" fill="#155e75">review_specs</text>
+  <text x="785" y="114" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">Step-by-step DS</text>
+  <text x="785" y="134" font-family="Arial" font-size="16" text-anchor="middle" fill="#334155">review workflow</text>
+
+  <path d="M620 96 H660" stroke="#475569" stroke-width="3" fill="none"/>
 
   <path d="M215 144 V190 H170 V220" stroke="#64748b" stroke-width="3" fill="none"/>
   <path d="M495 144 V190 H480 V220" stroke="#64748b" stroke-width="3" fill="none"/>

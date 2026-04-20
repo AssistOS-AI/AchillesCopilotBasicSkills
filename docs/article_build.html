@@ -27,6 +27,7 @@
 
       <h2>Validation Surface</h2>
       <p>The skill enforces more than file copying. It validates SVG geometry, checks that citations are supportable from cached evidence, rebuilds incrementally, and keeps the final HTML aligned with article-owned plans rather than hardcoded repository assumptions. The current repository also reuses its SVG validator for documentation maintenance tasks.</p>
+      <p>Projects that copy this skill may document their own article pipeline where it affects the host system, but they should not mirror <code>article_build</code> itself as a standalone imported-skill page inside the host project's <code>docs/</code> tree.</p>
 
       <h2>Relation to Tests</h2>
       <p>The tests under <code>tests/article_build/</code> verify parsing, rendering, SVG validation, and deterministic rebuild behavior. They exist to validate the example and script code carried by the skill folder, not to define a deployment package for downstream projects.</p>

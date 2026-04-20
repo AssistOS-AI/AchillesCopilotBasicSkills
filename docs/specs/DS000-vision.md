@@ -18,7 +18,13 @@ The repository must preserve a layered skill model. `gamp_specs` defines reposit
 
 ![Repository skill map](../assets/skill-map.svg)
 
-The repository must remain ready to host more skill families over time. When that happens, the new skills must be visible in the skill catalog and must be reflected in the bootstrap documentation rules rather than being introduced as undocumented exceptions. The repository must therefore preserve explicit catalog maintenance, explicit DS maintenance, and explicit per-skill documentation rather than treating these as secondary chores.
+The repository must remain ready to host more skill families over time. When that happens, the new skills must be visible in the skill catalog and must be reflected in the bootstrap documentation rules rather than being introduced as undocumented exceptions. The repository must therefore preserve explicit catalog maintenance, explicit DS maintenance, and explicit per-skill documentation rather than treating these as secondary chores. Because this repository is itself the skill catalog, it documents the skills under `docs/` and `docs/specs/`. Downstream projects that merely consume these skills must keep those documentation trees focused on the host project instead of duplicating the imported skill documentation there.
+
+## Decisions & Questions
+
+### Question #1: Why does this repository document the skills centrally while downstream projects should not duplicate that material in their own `docs/` trees?
+
+Response: The repository's direct subject is the reusable skill catalog, so the catalog contract belongs here. A downstream project uses the skills as agent tooling rather than as part of the host project's direct code or documentation surface. Keeping the authoritative skill descriptions in the catalog avoids duplicated DS files, reduces drift, and lets downstream projects keep their own documentation focused on their runtime, architecture, and product behavior.
 
 ## Conclusion
 

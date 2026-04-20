@@ -28,14 +28,18 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Use `references/specs-guidelines.md` when writing or revising the DS specifications.
 - Define the DS spec set based on project scope.
 - Always begin with `DS000-vision.md` and `DS001-coding-style.md`.
-- Create one DS file for each current skill in the repository, plus any additional DS files needed for shared architectural topics such as model strategy.
-- Keep the DS sequence contiguous with no missing intermediate numbers. If the repository uses `DS000` through `DS009`, the next new DS must be `DS010`.
+- In a skill-catalog repository, create one DS file for each current skill in the repository, plus any additional DS files needed for shared architectural topics such as model strategy.
+- In a downstream project that only consumes imported skills, keep the DS set focused on the host project itself. Do not create DS files under `docs/specs/` whose subject is the imported skills.
+- Keep the DS sequence contiguous with no missing intermediate numbers. If the repository uses `DS000` through `DS010`, the next new DS must be `DS011`.
 - Ensure the DS files are reachable from `matrix.md`, and link each DS entry through `/specsLoader.html?spec=DS0xx-description.md`.
 - Treat `DS001-coding-style.md` as the coding-style authority and make `AGENTS.md` point to it explicitly.
 - Keep the HTML documentation workflow and the DS specification workflow distinct.
 - Treat the DS specifications as the source of truth for documented behavior and structure.
+- Make every ordinary DS file use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`.
+- In `Decisions & Questions`, use numbered Markdown subchapters such as `### Question #1: ...`.
+- Put `Response` or `Options` inside the numbered question subchapter and keep unresolved multi-option questions unimplemented until one path is selected.
 - When code changes alter behavior, interfaces, architecture, workflows, or constraints, update both the HTML documentation and the DS specifications to match the implementation.
-- Maintain a `docs/specs/decisions.md` file and record architectural interpretations, high-risk assumptions, conflict resolutions, and DS renumbering decisions there.
+- Record architectural interpretations, high-risk assumptions, conflict resolutions, and unresolved alternatives directly inside the affected DS files under numbered `Decisions & Questions` entries.
 - Keep repository example code inside the relevant skill folders rather than introducing a shared root `src/` tree that copied skills would not carry with them.
 
 ### 3. Rebuild HTML Documentation
@@ -45,10 +49,12 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Keep the narrative consistent with the project’s role and interfaces, especially any agent or system responsibilities described in `AGENTS.md`.
 - Review the actual contents of each skill folder and document the local artifacts, dependencies, conventions, and responsibilities instead of relying on shallow summaries.
 - Follow `references/technical-docs-guidelines.md`.
+- In a skill-catalog repository, provide one HTML page per skill.
+- In a downstream project that only consumes imported skills, keep `/docs` focused on the host project. Do not create standalone skill pages there for the imported skills; keep any skill-local notes inside the local skill folders.
 - Choose one primary navigation model for the HTML documentation shell: a sidebar or a header navigation bar. Do not use both as parallel primary navigation systems in the same documentation set unless one is clearly secondary and non-redundant.
 - Treat the project as a standalone system in the HTML documentation. Do not expose machine-specific absolute paths, home directories, usernames, or other workstation-local filesystem details unless the repository itself requires them as part of the documented contract.
 - Ensure the HTML documentation reflects the current source code and remains aligned with the DS specifications.
-- Provide one HTML page per skill and an index page that explains how the skill set fits together, where the coding style is defined, and how tests are organized.
+- Provide an index page that explains how the system fits together, where the coding style is defined, and how tests are organized. Add one page per skill only when the repository itself is the skill catalog.
 
 ### 4. Create or Update `AGENTS.md`
 
@@ -62,8 +68,10 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - State explicitly that when source code changes, the HTML documentation and the specifications must both be updated to reflect the change.
 - State explicitly that all documentation, specifications, and comments must be written in English.
 - State explicitly that `AGENTS.md` must mention the currently available skills and must be updated whenever new skill folders are added.
+- State explicitly that downstream consumer projects must not put imported-skill DS files or skill pages inside the host project's `docs/` tree.
 - State explicitly that the GAMP skill itself must be updated when new skill families, coding-style rules, or project bootstrap rules are introduced.
 - State explicitly that DS numbering must remain gap-free.
+- State explicitly that `Decisions & Questions` uses numbered question subchapters and that rationale now lives in the affected DS files rather than in a separate repository decision log.
 
 ### 5. Install the Specs Loader
 
@@ -82,7 +90,7 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Regenerate `docs/specs/matrix.md` from DS metadata instead of editing it manually.
 - Run the documentation link verifier after documentation work so shared navigation, specs-loader links, and partial includes stay valid.
 - When the HTML documentation uses relative asset paths, `fetch()`-loaded partials, or other browser-resolved resources, run `node scripts/verify_static_site.js <docs-dir>` against the generated `docs/` folder. Add `--path` checks for project-specific resources when needed.
-- Verify that `docs/specs/decisions.md` exists and record any architectural interpretation that could affect future work.
+- Verify that each affected DS file carries the needed numbered `Decisions & Questions` entries for important rationale, tradeoffs, and unresolved issues.
 
 ### 7. Quality Checks
 
@@ -92,12 +100,14 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Confirm the HTML documentation does not mention workstation-specific absolute filesystem paths or other local-machine details that are not part of the project's real interface.
 - Validate that any HTML link pointing to specs, the specs matrix, or the specs loader resolves to an existing target.
 - Confirm referenced assets are stored under `docs/assets/` rather than embedded into the HTML files.
-- Ensure every spec file follows the `DS0xx-description.md` convention, includes `Introduction`, `Core Content`, and `Conclusion`, and fits into a contiguous numbering sequence.
+- Ensure every ordinary spec file follows the `DS0xx-description.md` convention, includes `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and fits into a contiguous numbering sequence.
 - Confirm the specs matrix links correctly via `specsLoader.html?spec=matrix.md`.
 - Confirm each DS entry in `matrix.md` uses the specs-loader path format `/specsLoader.html?spec=DS0xx-description.md`.
 - Confirm `AGENTS.md` points to the correct HTML documentation paths, the correct specs path, and `DS001-coding-style.md`.
 - Confirm `AGENTS.md`, `docs/index.html`, and `docs/specs/matrix.md` all mention the current skill set consistently.
 - Confirm the HTML documentation and specs are synchronized with the implementation, with specs kept authoritative if wording diverges.
+- Confirm downstream-consumer documentation rules are explicit: imported skills stay documented inside `skills/`, not in the host project's `/docs` DS set.
+- Confirm numbered `Decisions & Questions` entries exist wherever rationale or unresolved choices matter, and confirm no guidance still requires a separate decision-log file.
 
 ## Resources
 

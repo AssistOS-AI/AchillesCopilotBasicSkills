@@ -14,5 +14,4 @@ Generated from DS frontmatter by `skills/gamp_specs/scripts/generate_specs_matri
 | [DS007](specsLoader.html?spec=DS007-dgskill-build.md) | DGSkill Build | [[status:implemented]] | dgskill_build | Defines dynamic code generation skills that can stay textual or emit guarded procedural code under explicit sandbox and normalization rules. |
 | [DS008](specsLoader.html?spec=DS008-oskill-build.md) | O-Skill Build | [[status:implemented]] | oskill_build | Defines declarative orchestration-skill descriptors with explicit preparation, instructions, allowed skills, and session-type boundaries. |
 | [DS009](specsLoader.html?spec=DS009-antropic-skill-build.md) | Antropic Skill Build | [[status:implemented]] | antropic_skill_build | Defines the portability baseline that keeps Anthropic-style skills self-contained and locally documented. |
-
-| [Decision Log](specsLoader.html?spec=decisions.md) | Repository decisions | [[status:implemented]] | repository | Architectural interpretations, naming choices, DS renumbering decisions, and high-risk changes. |
+| [DS010](specsLoader.html?spec=DS010-review-specs.md) | Review Specs | [[status:implemented]] | review_specs | Defines a step-by-step review workflow for reconciling affected DS files with new context, instructions, and observed issues. |

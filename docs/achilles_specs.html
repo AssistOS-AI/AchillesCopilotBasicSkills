@@ -26,6 +26,7 @@
 
       <h2>Runtime Rules</h2>
       <p>The example dependency loader resolves AchillesAgentLib from the parent directory before consulting <code>node_modules</code>. The runtime configuration example adds manual override support for provider settings, model tiers, and task tags. These are example implementations for downstream projects, not a runtime distributed from this repository root.</p>
+      <p>When a downstream project adopts these helpers, its central documentation should describe only the host project's real runtime integration. It should not create standalone skill pages or DS files whose topic is <code>achilles_specs</code> itself.</p>
 
       <h2>Relation to Tests</h2>
       <p>The tests under <code>tests/achilles_specs/</code> verify these example modules and their behavior. They exist to keep the repository honest and to prevent documentation drift, but they are not deployment artifacts for projects that merely copy the skill folder.</p>

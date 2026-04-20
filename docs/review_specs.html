@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page">
+    <div class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">Home</a> / review_specs</p>
+      <p class="kicker">Skill Detail</p>
+      <h1>review_specs</h1>
+      <p><code>review_specs</code> defines the repository workflow for auditing affected DS files against new context, explicit instructions, and current implementation details. It is the skill to use when the specification set needs disciplined review rather than piecemeal copy edits.</p>
+      <table class="meta-table">
+        <tr><th>Depends on</th><td><code>gamp_specs</code></td></tr>
+        <tr><th>Primary artifacts</th><td><code>SKILL.md</code>, <code>DS.md</code></td></tr>
+        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS010-review-specs.md">DS010-review-specs.md</a></td></tr>
+      </table>
+      <h2>Review Method</h2>
+      <p>The skill requires an explicit task set, step-by-step inspection of each affected DS, and synchronization of every companion artifact that shares the contract surface. It treats implementation, user instructions, and existing repository guidance as equally important sources that must be reconciled rather than paraphrased independently.</p>
+      <h2>Core Content vs. Decisions</h2>
+      <p>The central distinction is that <code>Core Content</code> carries the contract backbone: general approach, limits, special cases, and invariants. <code>Decisions &amp; Questions</code> carries the detailed rationale and any unresolved alternatives through numbered subchapters such as <code>### Question #1: ...</code>. That section may grow as large as needed, while the contract backbone should stay concise and stable.</p>
+      <h2>Downstream Documentation Boundary</h2>
+      <p>The skill also reinforces the repository-wide rule that downstream consumer projects should not mirror imported-skill DS files or skill pages under the host project's <code>docs/</code> tree. Review work must preserve that boundary when specifications are revised.</p>
+    </div>
+  </main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>

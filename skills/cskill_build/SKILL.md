@@ -17,6 +17,7 @@ Use this skill when a capability must be generated from explicit specifications 
 4. Treat generated executable JavaScript as an implementation artifact regenerated from the descriptor and specs.
 5. Preserve repeatability, maintainability, and explicit requirement coverage over short-cycle improvisation.
 6. Keep coding-style, file-layout, and test-organization rules aligned with `DS001-coding-style.md`.
+7. Keep `Core Content` focused on module boundaries, general approach, invariants, and special cases, and move detailed rationale or unresolved choices into numbered `Decisions & Questions` subchapters in the relevant spec files.
 
 ## Descriptor Contract
 
@@ -31,3 +32,4 @@ Use this skill when a capability must be generated from explicit specifications 
 - Keep persistent specification output in English.
 - Align project-wide layout and coding style with `gamp_specs` and `achilles_specs`.
 - Preserve descriptor detail during restructures; do not collapse module-level specification boundaries into a shallow summary.
+- In downstream projects, do not duplicate imported C-Skill family guidance under the host project's `/docs` tree; keep it inside the copied skill folder.

@@ -59,6 +59,12 @@ This skill is executed by the **current agent**, so the agent must do more than 
 
 The repository build code should remain deterministic. Structural review, plan repair, paragraph expansion, and decisions about adding diagrams or tables belong to the current agent operating this skill.
 
+## Documentation boundary
+
+- Keep the reusable skill contract inside this skill folder and in the catalog repository.
+- If a downstream project uses this skill, do not add standalone `/docs` pages or DS files there whose topic is the imported `article_build` skill itself.
+- When DS text about this workflow is revised, keep general pipeline limits, invariants, and special cases in `Core Content`, and place detailed rationale or unresolved alternatives in numbered `Decisions & Questions` subchapters.
+
 ## Content and citation rules
 
 - The article HTML must be built from generated chapter markdown files, not directly from DS files.

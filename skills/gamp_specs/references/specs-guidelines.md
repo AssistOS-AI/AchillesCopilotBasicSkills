@@ -26,8 +26,11 @@ Write DS specifications as stable agent-facing contracts. Focus on rules, constr
 - Keep the numbering contiguous with no missing intermediate files.
 - Always include `DS000-vision.md` and `DS001-coding-style.md`.
 - Use frontmatter metadata with `id`, `title`, `status`, `owner`, and `summary` in every ordinary DS file.
-- Use `Introduction`, `Core Content`, and `Conclusion` in every DS file.
-- Treat `matrix.md` as a generated exception: it is derived from DS metadata and does not need the ordinary three-section structure.
+- Use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion` in every DS file.
+- In `Decisions & Questions`, use numbered Markdown subchapters such as `### Question #1: Why did we choose X?`.
+- Inside each numbered question subchapter, use `Response:` for resolved design choices and `Options:` for unresolved paths that still need selection.
+- When a numbered question is documented with multiple options, keep that area unimplemented in code until a human or agent selects one definitive option and updates the specification accordingly.
+- Treat `matrix.md` as a generated exception: it is derived from DS metadata and does not need the ordinary four-section structure.
 - Add one DS file for each active skill in the repository.
 - Create additional DS files only when a distinct boundary, contract surface, or invariant set cannot be expressed cleanly inside an existing DS file.
 - Keep the set of specifications proportionate to the real scope of the repository.
@@ -35,6 +38,7 @@ Write DS specifications as stable agent-facing contracts. Focus on rules, constr
 - Do not restate the same contract in multiple DS files unless one file is explicitly the source of truth and the other references it.
 - Make `DS001-coding-style.md` the canonical location for coding style, source layout, and modular test-organization rules.
 - Make `DS001-coding-style.md` the canonical location for file-size limits, line-length guidance, and `fileSizesCheck.sh` usage.
+- In downstream projects that only consume imported skills, keep DS files focused on the host project. Do not add DS files whose subject is the imported skill catalog; those instructions stay inside the local skill folders.
 
 ## Writing Standard
 
@@ -54,7 +58,7 @@ Write DS specifications as stable agent-facing contracts. Focus on rules, constr
 - Ensure each substantial requirement is defensible from code, repository guidance, or confirmed behavior.
 - If code behavior, repository guidance, and documentation disagree, prefer the most authoritative and currently defensible source.
 - Do not introduce speculative guarantees or contracts that the repository does not support.
-- When a conflict cannot be resolved confidently, state the narrower contract and record the interpretation in `docs/specs/decisions.md`.
+- When a conflict cannot be resolved confidently, state the narrower contract and add a numbered question in the affected DS file that captures the uncertainty or alternative paths.
 - The agent must not infer cross-module guarantees that are not explicitly established.
 
 ## Default Outcome

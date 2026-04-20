@@ -25,10 +25,10 @@
       <p>This skill defines the bootstrap contract for repository layout and documentation behavior. It specifies how `AGENTS.md` is written, how DS files are numbered and generated, how the matrix is derived from DS metadata, how link verification is run, and how `DS001-coding-style.md` is treated as the coding-style authority.</p>
 
       <h2>Portability Model</h2>
-      <p>The skill now assumes that portable example code stays inside skill folders. The example catalog reader therefore lives in <code>skills/gamp_specs/examples/skillCatalog.mjs</code> rather than a repository-level <code>src/</code> tree. This keeps the skill usable when copied into another project's local <code>skills/</code> folder.</p>
+      <p>The skill now assumes that portable example code stays inside skill folders. The example catalog reader therefore lives in <code>skills/gamp_specs/examples/skillCatalog.mjs</code> rather than a repository-level <code>src/</code> tree. This keeps the skill usable when copied into another project's local <code>skills/</code> folder. It also makes the downstream documentation boundary explicit: consumer projects document their own systems under <code>docs/</code> and keep imported-skill guidance inside the copied skill folders.</p>
 
       <h2>Documentation Tooling</h2>
-      <p>The skill carries the specs loader asset, a matrix generator, a static-site verifier, and a new HTML link verifier. The intended flow after documentation changes is to regenerate the matrix from DS frontmatter and then verify that HTML links and specs-loader references resolve locally.</p>
+      <p>The skill carries the specs loader asset, a matrix generator, a static-site verifier, and a new HTML link verifier. The intended flow after documentation changes is to regenerate the matrix from DS frontmatter and then verify that HTML links and specs-loader references resolve locally. Design rationale now lives inside each DS under numbered <code>Decisions &amp; Questions</code> entries rather than in a separate repository decision log.</p>
 
       <h2>Code-Style Enforcement</h2>
       <p><code>gamp_specs</code> also ships <code>assets/fileSizesCheck.sh</code>, which downstream projects can copy to their root. The current project keeps the same script at the repository root and uses it as the practical source for file-size and line-length guidance referenced by <a href="specsLoader.html?spec=DS001-coding-style.md">DS001</a>.</p>

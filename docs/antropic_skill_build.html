@@ -21,6 +21,7 @@
       </table>
       <h2>Design Position</h2>
       <p>The repository adopts this skill to make portability a hard rule. Shared repository conventions still exist, but runtime behavior inside a skill folder must not depend on host-project source files unless that dependency is part of the agent runtime itself.</p>
+      <p>The same portability rule applies to documentation: imported skills stay documented with their local artifacts and should not be mirrored as separate skill pages or DS files inside a downstream project's <code>docs/</code> tree.</p>
       <h2>Current Repository Application</h2>
       <p>The recent removal of the repository-level <code>src/</code> tree is an application of this rule. Example code that documents skill behavior now lives under the relevant skill folder, which matches the way downstream projects are expected to consume the skill set.</p>
     </div>

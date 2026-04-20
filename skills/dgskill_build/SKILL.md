@@ -17,6 +17,7 @@ Use this skill when requirements are exploratory, transient, or too fluid to jus
 4. Use this family for rapid prototyping, unusual transformations, and proportional effort responses.
 5. Document how the runtime decides between textual and procedural outputs.
 6. Keep coding-style, file-layout, and test-organization rules aligned with `DS001-coding-style.md`.
+7. Keep `Core Content` focused on execution boundaries, mode-selection rules, invariants, and important edge cases, and use numbered `Decisions & Questions` subchapters for rationale or unresolved alternatives.
 
 ## Constraints
 
@@ -25,3 +26,4 @@ Use this skill when requirements are exploratory, transient, or too fluid to jus
 - Prefer clear guardrails over vague autonomy.
 - Keep project-wide conventions aligned with `gamp_specs` and `achilles_specs`.
 - Preserve sandbox and normalization details during restructures; they are part of the contract, not expendable explanation.
+- In downstream projects, do not mirror imported DGSkill family guidance under the host project's `/docs` tree.

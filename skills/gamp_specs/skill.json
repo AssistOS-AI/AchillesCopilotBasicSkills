@@ -13,7 +13,6 @@
     "fileSizesCheck.sh",
     "docs/index.html",
     "docs/specs/",
-    "docs/specs/decisions.md",
     "docs/specs/matrix.md"
   ],
   "entrypoints": [
