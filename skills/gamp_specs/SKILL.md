@@ -45,7 +45,9 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 ### 3. Rebuild HTML Documentation
 
 - Update or create the required HTML pages and shared assets.
-- Keep SVG files and any other documentation assets separate from the HTML files under `docs/assets/`.
+- Include the Mermaid ESM module script in every generated HTML page’s `<head>` as specified in `references/docs-structure.md` so that `<pre class="mermaid">` blocks render as diagrams.
+- Use inline Mermaid definitions for architecture, data-flow, component, sequence, and state diagrams instead of ASCII art or static SVG when the diagram type is supported by Mermaid.
+- Keep static SVG files and any other documentation assets that require custom layout separate from the HTML files under `docs/assets/`.
 - Keep the narrative consistent with the project’s role and interfaces, especially any agent or system responsibilities described in `AGENTS.md`.
 - Review the actual contents of each skill folder and document the local artifacts, dependencies, conventions, and responsibilities instead of relying on shallow summaries.
 - Follow `references/technical-docs-guidelines.md`.
@@ -99,7 +101,9 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Confirm the HTML documentation uses a single primary navigation system across the set, choosing either a sidebar or a header navigation bar according to the project's needs.
 - Confirm the HTML documentation does not mention workstation-specific absolute filesystem paths or other local-machine details that are not part of the project's real interface.
 - Validate that any HTML link pointing to specs, the specs matrix, or the specs loader resolves to an existing target.
-- Confirm referenced assets are stored under `docs/assets/` rather than embedded into the HTML files.
+- Confirm referenced static assets are stored under `docs/assets/` rather than embedded into the HTML files.
+- Confirm every generated HTML page includes the Mermaid ESM module script in `<head>`.
+- Confirm no ASCII box-drawing diagrams remain in `<pre><code>` blocks — replace them with Mermaid definitions.
 - Ensure every ordinary spec file follows the `DS0xx-description.md` convention, includes `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and fits into a contiguous numbering sequence.
 - Confirm the specs matrix links correctly via `specsLoader.html?spec=matrix.md`.
 - Confirm each DS entry in `matrix.md` uses the specs-loader path format `/specsLoader.html?spec=DS0xx-description.md`.

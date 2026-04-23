@@ -29,6 +29,22 @@ This skill enforces a standard documentation layout rooted in `AGENTS.md` and `d
 - Keep SVG files and any other assets outside the HTML files and store them under `docs/assets/`.
 - Follow `technical-docs-guidelines.md` for HTML writing, editorial, and presentation rules.
 
+## Mermaid Diagrams
+
+Every generated HTML page must include the Mermaid ESM module in `<head>` so that inline `<pre class="mermaid">` blocks render as diagrams:
+
+```html
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+</script>
+```
+
+- Use `<pre class="mermaid">` for diagram definitions. Do not wrap them in `<code>` tags.
+- Prefer Mermaid over static SVG for architecture diagrams, data flows, component relationships, sequence diagrams, and state machines. These diagram types change with the codebase and are easier to maintain as text.
+- Keep static SVGs under `docs/assets/` only for diagrams that require precise custom layout, branding elements, or visual detail that Mermaid cannot express.
+- The Mermaid `theme` may be adjusted per project to match the documentation stylesheet. Use `'neutral'` as the default.
+
 ## Specs Folder Rules
 
 - Files must follow `DS0xx-description.md`, for example `DS000-vision.md`.

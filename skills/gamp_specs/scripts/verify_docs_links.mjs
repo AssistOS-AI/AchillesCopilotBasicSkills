@@ -97,12 +97,27 @@ async function verifyHtmlFile(filePath) {
   return issues;
 }
 
+const MERMAID_PATTERN = /mermaid.*?\.esm\.min\.mjs/;
+
+function checkMermaidInclude(filePath, html) {
+  const partialsDir = resolve(docsDir, 'partials');
+  if (filePath.startsWith(partialsDir)) {
+    return [];
+  }
+  if (!MERMAID_PATTERN.test(html)) {
+    return [`${filePath}: missing Mermaid ESM module script in <head>.`];
+  }
+  return [];
+}
+
 async function main() {
   const htmlFiles = await listHtmlFiles(docsDir);
   const allIssues = [];
 
   for (const htmlFile of htmlFiles) {
     allIssues.push(...(await verifyHtmlFile(htmlFile)));
+    const html = await readFile(htmlFile, 'utf8');
+    allIssues.push(...checkMermaidInclude(htmlFile, html));
   }
 
   if (allIssues.length > 0) {

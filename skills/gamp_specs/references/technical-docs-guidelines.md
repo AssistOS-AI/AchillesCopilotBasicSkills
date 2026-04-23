@@ -71,8 +71,11 @@ Write for human readers. Explain what exists, why it exists, and how it behaves 
 - When documenting a downstream project that merely consumes imported skills, keep `docs/` focused on the host project and avoid standalone pages about those imported skills. Keep skill-specific agent guidance inside the copied skill folders instead.
 - When explaining a runtime flow or generation pipeline, prefer a compact visual diagram over an ASCII block in `<pre><code>` when the diagram improves clarity.
 - Keep diagrams technically exact, visually restrained, and readable on mobile.
-- Store SVG diagrams and any other documentation assets in `docs/assets/` instead of embedding the asset payload directly in HTML files.
-- If SVG diagrams are used, shorten, wrap, or fit labels so text stays inside its visual container.
+- Prefer inline Mermaid definitions (`<pre class="mermaid">`) over static SVG or ASCII art for architecture diagrams, data-flow diagrams, component relationships, sequence diagrams, and state machines. Mermaid definitions are text, so they stay maintainable alongside the code they describe.
+- Do not use ASCII box-drawing characters (`─`, `│`, `┌`, `└`, etc.) for diagrams. Browser monospace fonts do not render them at consistent widths, producing broken alignment. Use Mermaid instead.
+- Keep Mermaid diagram definitions concise. Use short node labels and let the layout engine handle positioning. Do not force coordinates or override the automatic layout unless the default result is unreadable.
+- Reserve static SVG files under `docs/assets/` for diagrams that need precise custom layout, branding elements, or visual detail that Mermaid cannot express.
+- If static SVG diagrams are used, shorten, wrap, or fit labels so text stays inside its visual container.
 - When showing a representative directory layout, prefer a visual tree component over a raw ASCII directory dump in `<pre><code>` when the tree is easier to scan.
 - Preserve the real file and folder names in any directory tree component.
 
