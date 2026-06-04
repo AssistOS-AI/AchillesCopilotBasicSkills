@@ -13,14 +13,15 @@ This repository is the standardized, reusable baseline skill catalog for the tea
 
 ## Current Skills
 
-- `gamp_specs`
-- `achilles_specs`
-- `article_build`
-- `cskill_build`
-- `dgskill_build`
-- `oskill_build`
-- `antropic_skill_build`
-- `review_specs`
+- `gamp-specs`
+- `achilles-specs`
+- `article-build`
+- `cskill-build`
+- `dgskill-build`
+- `oskill-build`
+- `antropic-skill-build`
+- `review-specs`
+- `manage-ploinky-agents`
 
 ## Documentation Authority
 

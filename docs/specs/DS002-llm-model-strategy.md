@@ -2,7 +2,7 @@
 id: DS002
 title: LLM Model Strategy
 status: implemented
-owner: achilles_specs
+owner: achilles-specs
 summary: Defines explicit task tags, model tiers, and manual-override expectations for LLMAgent-based routing.
 ---
 
@@ -18,7 +18,7 @@ All LLM interactions must be routed through `LLMAgent` and exposed through share
 
 ![LLM model tier strategy](../assets/llm-model-tiers.svg)
 
-The exact provider names may vary by deployment, but the tier model must remain explicit and manually overridable. The repository example implementation therefore exposes default task tags and model tiers through `skills/achilles_specs/examples/runtimeConfig.mjs` instead of scattering them through ad hoc constants. Documentation and agent guidance must describe the existence of this tier model rather than assuming it can be rediscovered from code.
+The exact provider names may vary by deployment, but the tier model must remain explicit and manually overridable. The repository example implementation therefore exposes default task tags and model tiers through `skills/achilles-specs/examples/runtimeConfig.mjs` instead of scattering them through ad hoc constants. Documentation and agent guidance must describe the existence of this tier model rather than assuming it can be rediscovered from code.
 
 ## Decisions & Questions
 

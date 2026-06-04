@@ -14,7 +14,7 @@ This repository exists to provide a standardized, reusable baseline of self-cont
 
 ## Core Content
 
-The repository must preserve a layered skill model. `gamp_specs` defines repository bootstrap and documentation rules. `achilles_specs` defines AchillesAgentLib and runtime-configuration conventions. The remaining skills define reusable families or executable workflows. The repository must expose those layers consistently through `README.md`, `AGENTS.md`, `docs/index.html`, and the DS matrix.
+The repository must preserve a layered skill model. `gamp-specs` defines repository bootstrap and documentation rules. `achilles-specs` defines AchillesAgentLib and runtime-configuration conventions. The remaining skills define reusable families or executable workflows. The repository must expose those layers consistently through `README.md`, `AGENTS.md`, `docs/index.html`, and the DS matrix.
 
 ![Repository skill map](../assets/skill-map.svg)
 

@@ -2,7 +2,7 @@
 id: DS001
 title: Coding Style
 status: implemented
-owner: gamp_specs
+owner: gamp-specs
 summary: Defines repository-wide coding style, file layout, modular test organization, and size constraints including periodic fileSizesCheck usage.
 ---
 
@@ -18,11 +18,11 @@ The repository must default to Node.js with `.mjs` source files and async/await.
 
 This repository is not a production runtime package. It exists to hold portable skill folders plus the tests and documentation that validate them. Example code must therefore live inside the relevant skill folder, typically under `examples/`, rather than in a shared repository-level `src/` tree. Tests must be grouped by skill as `tests/<skill-name>/`, and each test file should cover one coherent module boundary or one coherent verification responsibility rather than becoming a monolith.
 
-The repository must keep source files small enough to review comfortably on a modern screen. The baseline guardrail is provided by `fileSizesCheck.sh`, which must exist at the repository root and must also be available as `skills/gamp_specs/assets/fileSizesCheck.sh` so new projects initialized from this skill can copy it into place. The current script treats files above 500 lines as warning-level oversized files and files above 800 lines as critical oversized files, while also reporting long lines above 300 characters. As a repository convention, contributors should aim to keep executable source files well below the 700 to 800 line danger zone and should keep line lengths close to normal screen width, with 120 characters acting as the practical readability threshold and 300 characters as the hard long-line warning surfaced by the checker.
+The repository must keep source files small enough to review comfortably on a modern screen. The baseline guardrail is provided by `fileSizesCheck.sh`, which must exist at the repository root and must also be available as `skills/gamp-specs/assets/fileSizesCheck.sh` so new projects initialized from this skill can copy it into place. The current script treats files above 500 lines as warning-level oversized files and files above 800 lines as critical oversized files, while also reporting long lines above 300 characters. As a repository convention, contributors should aim to keep executable source files well below the 700 to 800 line danger zone and should keep line lengths close to normal screen width, with 120 characters acting as the practical readability threshold and 300 characters as the hard long-line warning surfaced by the checker.
 
 The script must be run periodically during maintenance and after larger documentation or source refactors. The output should be used as a refactoring signal rather than ignored as noise. When a file becomes too large, responsibilities should be split into smaller modules instead of normalizing oversized files as acceptable.
 
-AchillesAgentLib is authorized for this repository. The portable example resolver lives in `skills/achilles_specs/examples/depsLoader.mjs` and must attempt parent-directory resolution first and fall back to `node_modules`. Runtime configuration examples live alongside it in the same skill folder and must support manual overrides in addition to environment-based defaults. All LLM interactions must use the `LLMAgent` class through shared runtime configuration.
+AchillesAgentLib is authorized for this repository. The portable example resolver lives in `skills/achilles-specs/examples/depsLoader.mjs` and must attempt parent-directory resolution first and fall back to `node_modules`. Runtime configuration examples live alongside it in the same skill folder and must support manual overrides in addition to environment-based defaults. All LLM interactions must use the `LLMAgent` class through shared runtime configuration.
 
 Documentation must remain synchronized across `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers. Ordinary DS files must use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and the `Decisions & Questions` section must use numbered question subchapters such as `### Question #1: ...`. In downstream projects that consume imported skills from this catalog, the host project's `docs/` and `docs/specs/` trees must stay focused on the host project rather than duplicating imported-skill DS files or skill pages.
 

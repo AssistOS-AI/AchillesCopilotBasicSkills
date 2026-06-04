@@ -2,7 +2,7 @@
 id: DS007
 title: DGSkill Build
 status: implemented
-owner: dgskill_build
+owner: dgskill-build
 summary: Defines dynamic code generation skills that can stay textual or emit guarded procedural code under explicit sandbox and normalization rules.
 ---
 

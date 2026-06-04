@@ -15,14 +15,15 @@ This repository is the standardized, reusable catalog of self-contained skills f
 
 ## Current Skill Catalog
 
-- `gamp_specs`
-- `achilles_specs`
-- `article_build`
-- `cskill_build`
-- `dgskill_build`
-- `oskill_build`
-- `antropic_skill_build`
-- `review_specs`
+- `gamp-specs`
+- `achilles-specs`
+- `article-build`
+- `cskill-build`
+- `dgskill-build`
+- `oskill-build`
+- `antropic-skill-build`
+- `review-specs`
+- `manage-ploinky-agents`
 
 ## Repository Rules
 
@@ -36,15 +37,15 @@ This repository is the standardized, reusable catalog of self-contained skills f
 - Treat `tests/` as repository validation only. The tests verify example code and scripts carried by the skills, but they are not deployment artifacts for downstream projects that copy those skills.
 - Keep `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/` synchronized when repository rules or the skill catalog change.
 - When a new skill is added under `skills/`, update `AGENTS.md`, `README.md`, `docs/index.html`, the per-skill HTML page set, `docs/specs/matrix.md`, and the relevant DS files in the same change set.
-- When a new skill family, bootstrap rule, coding-style rule, or DS-generation rule is introduced, update `skills/gamp_specs/` in the same change set.
-- Keep DS numbering contiguous with no missing intermediate files. The sequence currently runs from `DS000` through `DS010`, and future additions must extend the sequence without leaving gaps.
+- When a new skill family, bootstrap rule, coding-style rule, or DS-generation rule is introduced, update `skills/gamp-specs/` in the same change set.
+- Keep DS numbering contiguous with no missing intermediate files. The sequence currently runs from `DS000` through `DS011`, and future additions must extend the sequence without leaving gaps.
 - Ordinary DS files must include `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`. In `Decisions & Questions`, use numbered Markdown subchapters such as `### Question #1: ...`, and place the `Response` or `Options` inside that subchapter.
 
 ## Runtime Defaults
 
 - Default runtime language: Node.js with `.mjs` modules and async/await.
 - Default dependency policy: no external dependencies without explicit user approval.
-- AchillesAgentLib is authorized and the example resolver lives in `skills/achilles_specs/examples/depsLoader.mjs`.
+- AchillesAgentLib is authorized and the example resolver lives in `skills/achilles-specs/examples/depsLoader.mjs`.
 - All LLM interactions must use `LLMAgent` through runtime configuration.
 
 ## Key Paths

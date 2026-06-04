@@ -2,7 +2,7 @@
 id: DS008
 title: O-Skill Build
 status: implemented
-owner: oskill_build
+owner: oskill-build
 summary: Defines declarative orchestration-skill descriptors with explicit preparation, instructions, allowed skills, and session-type boundaries.
 ---
 

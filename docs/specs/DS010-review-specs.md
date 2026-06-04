@@ -2,7 +2,7 @@
 id: DS010
 title: Review Specs
 status: implemented
-owner: review_specs
+owner: review-specs
 summary: Defines a step-by-step review workflow for reconciling affected DS files with new context, instructions, and observed issues.
 ---
 

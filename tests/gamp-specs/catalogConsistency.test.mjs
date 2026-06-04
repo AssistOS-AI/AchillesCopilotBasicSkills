@@ -1,0 +1,61 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { access, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { readSkillCatalog, validateSkillCatalog } from '../../skills/gamp-specs/examples/skillCatalog.mjs';
+
+const repoRoot = resolve('.');
+
+test('skill catalog matches the expected repository baseline', async () => {
+  const catalog = await readSkillCatalog(repoRoot);
+  const ids = catalog.map((skill) => skill.id);
+
+  assert.deepEqual(ids, [
+    'achilles-specs',
+    'antropic-skill-build',
+    'article-build',
+    'cskill-build',
+    'dgskill-build',
+    'gamp-specs',
+    'manage-ploinky-agents',
+    'oskill-build',
+    'review-specs'
+  ]);
+  assert.deepEqual(validateSkillCatalog(catalog), []);
+
+  for (const skill of catalog) {
+    assert.match(skill.descriptor, /^---\n/, `${skill.id} must start with valid frontmatter.`);
+  }
+});
+
+test('repository guidance mentions every skill and every skill page exists', async () => {
+  const catalog = await readSkillCatalog(repoRoot);
+  await assert.rejects(access(resolve(repoRoot, 'AGENT.md')), { code: 'ENOENT' });
+  await assert.rejects(access(resolve(repoRoot, 'docs/specs/decisions.md')), { code: 'ENOENT' });
+
+  const [readme, agents, indexHtml, matrix, specsLoader, assetLoader, rootSizeCheck, assetSizeCheck] = await Promise.all([
+    readFile(resolve(repoRoot, 'README.md'), 'utf8'),
+    readFile(resolve(repoRoot, 'AGENTS.md'), 'utf8'),
+    readFile(resolve(repoRoot, 'docs/index.html'), 'utf8'),
+    readFile(resolve(repoRoot, 'docs/specs/matrix.md'), 'utf8'),
+    readFile(resolve(repoRoot, 'docs/specsLoader.html'), 'utf8'),
+    readFile(resolve(repoRoot, 'skills/gamp-specs/assets/specsLoader.html'), 'utf8'),
+    readFile(resolve(repoRoot, 'fileSizesCheck.sh'), 'utf8'),
+    readFile(resolve(repoRoot, 'skills/gamp-specs/assets/fileSizesCheck.sh'), 'utf8')
+  ]);
+
+  assert.equal(specsLoader, assetLoader);
+  assert.equal(rootSizeCheck, assetSizeCheck);
+  assert.doesNotMatch(agents, /Bootstrap utilities:\s*`src\/`/);
+  assert.doesNotMatch(readme, /docs\/specs\/decisions\.md/);
+  assert.doesNotMatch(agents, /docs\/specs\/decisions\.md/);
+
+  for (const skill of catalog) {
+    const skillPage = await readFile(resolve(repoRoot, 'docs', `${skill.id}.html`), 'utf8');
+    assert.match(readme, new RegExp(skill.id));
+    assert.match(agents, new RegExp(skill.id));
+    assert.match(indexHtml, new RegExp(skill.id));
+    assert.match(matrix, new RegExp(skill.id, 'i'));
+    assert.match(skillPage, new RegExp(skill.id));
+  }
+});
