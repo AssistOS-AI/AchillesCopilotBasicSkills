@@ -4,7 +4,9 @@ Ploinky security relies on a strict router boundary, separate JWT families, expl
 
 ## The router is the public control point.
 
-`RoutingServer` is the only public HTTP server. Agents run in isolated containers, listen on local ports, and should not be reachable directly from outside. A public request must pass through the router before it reaches an agent. The router authenticates the caller, applies policy, rate-limits where appropriate, strips unsafe internal headers supplied by clients, and proxies only after access is allowed.
+`RoutingServer` is the only public HTTP entrypoint for agent application surfaces — HTTP endpoints, `/<agent>/mcp`, tools, resources, task-status, and chat-completions. Agents run in isolated containers, listen on local ports, and their application surfaces should not be reachable directly from outside. A public application request must pass through the router before it reaches an agent. The router authenticates the caller, applies policy, rate-limits where appropriate, strips unsafe internal headers supplied by clients, and proxies only after access is allowed.
+
+A declared media or data plane is the only sanctioned exception. A real-time transport the HTTP router cannot proxy (for example a WebRTC SFU such as LiveKit) may be reached by clients directly, but only when the router-mediated control plane mints the scoped, short-lived access credential, the plane verifies that credential itself, and the exposure is an explicit manifest or spec decision. The media plane carries no Ploinky session or internal JWT; its credential is a separate, app-owned token family, not one of the three Ploinky families, and the per-agent secret rule does not apply to it.
 
 `AgentServer` does not decide global external policy. It performs defensive checks, verifies router-signed internal tokens, and executes only the concrete operation that the router authorized.
 

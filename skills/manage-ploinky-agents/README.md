@@ -18,7 +18,7 @@ After installation, Codex can discover the skill from the repository skill direc
 
 Ask the coding agent to use `manage-ploinky-agents` whenever a task touches `manifest.json`, `mcp-config.json`, router policy, HTTP services, public services, chat completions, JWT signing, request hashes, MCP tools, or agent-to-agent calls. The most important behavior is not merely to generate valid JSON. The important behavior is to preserve the Ploinky security model while making the requested change.
 
-A Ploinky agent has a canonical agent id in the form `agent:<repo>/<agent>`. The public route key may be an alias, but the alias must not change the agent id. The router remains the public control point. User Session JWTs terminate at the router. Agent Assertion JWTs go from agents to the router. Router Request JWTs go from the router to the target AgentServer. MCP policy is explicit and fail-closed.
+A Ploinky agent has a canonical agent id in the form `agent:<repo>/<agent>`. The public route key may be an alias, but the alias must not change the agent id. The router remains the public control point for agent application surfaces; a declared media or data plane (for example a LiveKit WebRTC SFU) may be reached directly but only with a router-issued, plane-verified credential. User Session JWTs terminate at the router. Agent Assertion JWTs go from agents to the router. Router Request JWTs go from the router to the target AgentServer. MCP policy is explicit and fail-closed.
 
 ## Validate an agent directory.
 

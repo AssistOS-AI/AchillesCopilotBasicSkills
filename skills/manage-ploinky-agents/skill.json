@@ -1,7 +1,7 @@
 {
   "title": "Manage Ploinky Agents",
   "family": "anthropic",
-  "summary": "Defines how to create, update, review, and secure Ploinky agents while preserving agent identity, the router-only boundary, the JWT families, and fail-closed MCP policy, and resynchronizing the owning repository's specifications with gamp-specs after every change.",
+  "summary": "Defines how to create, update, review, and secure Ploinky agents while preserving agent identity, the router-mediated boundary (with a declared media/data-plane exception), the JWT families, and fail-closed MCP policy, and resynchronizing the owning repository's specifications with gamp-specs after every change.",
   "aliases": [
     "manage-ploinky-agents",
     "manage_ploinky_agents",
