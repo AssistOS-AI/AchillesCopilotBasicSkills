@@ -185,7 +185,7 @@ The import of `crypto` must be added when this snippet is used as a standalone m
 
 ## How should a Router Request JWT be verified by an AgentServer?
 
-An AgentServer should verify only Router Request JWTs for protected execution. A raw user session token should not be accepted. The concrete implementation should use the repository's JWT utilities when they exist, but the checks should preserve this shape.
+An AgentServer should verify only Router Request JWTs for authenticated or internal execution. A raw user or guest session token should not be accepted. The concrete implementation should use the repository's token services when they exist, but the checks should preserve this shape.
 
 ```js
 export function verifyRouterRequestClaims({ claims, actual, agentId }) {
@@ -209,7 +209,7 @@ export function verifyRouterRequestClaims({ claims, actual, agentId }) {
 
 ## How should an HTTP service handler treat router auth info?
 
-A protected HTTP service may receive `x-ploinky-auth-info` when the router intentionally injects it. The handler should parse it defensively, avoid trusting client-supplied copies on generic passthrough routes, and avoid logging complete tokens.
+An authenticated or guest HTTP service may receive `x-ploinky-auth-info` when the router intentionally injects it. A public HTTP service should not rely on router auth info or invocation metadata. The handler should parse auth info defensively, avoid trusting client-supplied copies on generic passthrough routes, and avoid logging complete tokens.
 
 ```js
 export function readRouterAuthInfo(req) {

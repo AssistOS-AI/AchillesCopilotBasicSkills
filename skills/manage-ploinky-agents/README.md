@@ -16,7 +16,7 @@ After installation, Codex can discover the skill from the repository skill direc
 
 ## Use the skill while editing an agent.
 
-Ask the coding agent to use `manage-ploinky-agents` whenever a task touches `manifest.json`, `mcp-config.json`, router policy, HTTP services, public services, chat completions, JWT signing, request hashes, MCP tools, or agent-to-agent calls. The most important behavior is not merely to generate valid JSON. The important behavior is to preserve the Ploinky security model while making the requested change.
+Ask the coding agent to use `manage-ploinky-agents` whenever a task touches `manifest.json`, `mcp-config.json`, router policy, HTTP route access, HTTP services, chat completions, token signing, request hashes, MCP tools, or agent-to-agent calls. The most important behavior is not merely to generate valid JSON. The important behavior is to preserve the Ploinky security model while making the requested change.
 
 A Ploinky agent has a canonical agent id in the form `agent:<repo>/<agent>`. The public route key may be an alias, but the alias must not change the agent id. The router remains the public control point for agent application surfaces; a declared media or data plane (for example a LiveKit WebRTC SFU) may be reached directly but only with a router-issued, plane-verified credential. User Session JWTs terminate at the router. Agent Assertion JWTs go from agents to the router. Router Request JWTs go from the router to the target AgentServer. MCP policy is explicit and fail-closed.
 
@@ -32,7 +32,7 @@ The validator is intentionally conservative. A warning does not always mean the 
 
 ## Read the references when the task requires them.
 
-`references/ploinky-agent-reference.md` explains what a Ploinky agent is, how it is discovered, how runtime modes work, how the bundled AgentServer behaves, how aggregate `/mcp` and per-agent `/<agent>/mcp` work, and how service routes are exposed. `references/config-files.md` explains `manifest.json`, `mcp-config.json`, `policy-state.json`, service declarations, and safe example shapes. `references/security-invariants.md` explains the router boundary, JWT families, request hashes, MCP policy, HTTP whitelist behavior, and the exact separation between user-admin and internal-agent access. `references/workflows.md` explains how to create, update, and review agents. `references/code-examples.md` contains Node.js examples for tool handlers, canonical request hashing, Agent Assertion JWT signing, and safe HTTP handler patterns.
+`references/ploinky-agent-reference.md` explains what a Ploinky agent is, how it is discovered, how runtime modes work, how the bundled AgentServer behaves, how aggregate `/mcp` and per-agent `/<agent>/mcp` work, and how service routes are exposed. `references/config-files.md` explains `manifest.json`, `mcp-config.json`, `policy-state.json`, service declarations, route access declarations, and safe example shapes. `references/security-invariants.md` explains the router boundary, token families, request hashes, MCP policy, HTTP route access behavior, and the exact separation between user-admin and internal-agent access. `references/workflows.md` explains how to create, update, and review agents. `references/code-examples.md` contains Node.js examples for tool handlers, canonical request hashing, Agent Assertion JWT signing, and safe HTTP handler patterns.
 
 ## Keep the specifications in sync.
 

@@ -17,10 +17,29 @@ const SENSITIVE_KEY_RE = /(MASTER_KEY|AGENT_SECRET|SESSION_JWT|ROUTER_REQUEST_JW
 const TOOL_NAME_RE = /^[A-Za-z0-9_.:-]+$/;
 const AGENT_RE = /^[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?$/;
 const POLICY_ACCESS = new Set(['authenticated', 'internal', 'admin']);
+const HTTP_ROUTE_ACCESS = new Set(['public', 'guest', 'authenticated']);
 const POLICY_SOURCE = new Set(['admin', 'mcp-config', 'router:boot', 'system', 'migration']);
 const TOOL_TAGS = new Set(['internal', 'admin']);
-const INTERNAL_EXACT = new Set(['/whitelist/command', '/metrics', '/health/internal']);
-const INTERNAL_PREFIXES = ['/auth/', '/admin/', '/__agent/'];
+const INTERNAL_EXACT = new Set(['/policy/command', '/metrics', '/health', '/health/internal']);
+const ROUTER_OWNED_FIRST_SEGMENTS = new Set([
+  'agent-card',
+  'mcp',
+  'auth',
+  'admin',
+  'webtty',
+  'webchat',
+  'dashboard',
+  'status',
+  'upload',
+  'blobs',
+  'workspace-files',
+  'api',
+  'health',
+  'metrics',
+  'MCPBrowserClient.js',
+  'whitelist'
+]);
+const REMOVED_SERVICE_SPEC_FIELDS = ['auth', 'mode', 'forceGuest'];
 
 const results = { errors: [], warnings: [], info: [] };
 
@@ -106,28 +125,88 @@ function getArrayLikeServices(value) {
   return [{ value }];
 }
 
-function validatePublicPolicyPath(input, where) {
+function fullyDecodeSegment(segment) {
+  let current = String(segment);
+  for (let i = 0; i < 3; i += 1) {
+    let next;
+    try {
+      next = decodeURIComponent(current);
+    } catch {
+      break;
+    }
+    if (next === current) break;
+    current = next;
+  }
+  return current;
+}
+
+function hasInternalAgentSegment(input) {
+  const pathname = String(input || '').split('?')[0].split('#')[0];
+  return pathname.split('/').filter(Boolean).some((segment) => segment === '__agent' || fullyDecodeSegment(segment) === '__agent');
+}
+
+function validatePathShape(input, where, { allowWildcard = true } = {}) {
   if (typeof input !== 'string') {
     error('path must be a string', where);
-    return;
+    return undefined;
   }
-  if (!input.startsWith('/')) error('path must start with /', where);
-  if (input.includes('\0')) error('path contains null byte', where);
-  if (input.includes('\\')) error('path contains backslash', where);
-  if (input.includes('?') || input.includes('#')) warn('path contains query/fragment; whitelist decisions must ignore these', where);
-  if (input.includes('//')) error('path contains double slash', where);
-  if (/%2f|%5c/i.test(input)) error('path contains encoded slash/backslash', where);
-  const segments = input.split('/');
+  let value = input.trim();
+  if (!value) {
+    error('path must be a non-empty string', where);
+    return undefined;
+  }
+  if (/[a-z][a-z0-9+.-]*:\/\//i.test(value)) error('path contains URL scheme', where);
+  if (value.includes('#')) error('path contains fragment', where);
+  if (value.includes('?')) {
+    warn('path contains query; route access ignores query strings', where);
+    value = value.slice(0, value.indexOf('?'));
+  }
+  if (!value.startsWith('/')) error('path must start with /', where);
+  if (value.includes('\0')) error('path contains null byte', where);
+  if (value.includes('\\')) error('path contains backslash', where);
+  if (value.includes('//')) error('path contains double slash', where);
+  if (/%2f|%5c/i.test(value)) error('path contains encoded slash/backslash', where);
+
+  const wildcard = value.endsWith('/*');
+  const core = wildcard ? (value.slice(0, -2) || '/') : value;
+  const segments = core.split('/');
   if (segments.includes('..') || segments.includes('.')) error('path contains traversal segment', where);
 
-  const stars = input.match(/\*/g) || [];
+  const stars = value.match(/\*/g) || [];
   if (stars.length > 1) error('path contains more than one wildcard', where);
-  if (stars.length === 1 && !input.endsWith('/*')) error('wildcard must be suffix-only /*', where);
-  if (input.includes('**')) error('globstar wildcard is not allowed', where);
+  if (stars.length === 1 && !wildcard) error('wildcard must be suffix-only /*', where);
+  if (stars.length && !allowWildcard) error('wildcard is not allowed here', where);
+  if (value.includes('**')) error('globstar wildcard is not allowed', where);
+  return value;
+}
 
-  if (INTERNAL_EXACT.has(input)) error('internal route cannot be public/whitelisted', where);
-  if (INTERNAL_PREFIXES.some((prefix) => input.startsWith(prefix))) error('internal route prefix cannot be public/whitelisted', where);
-  if (/^\/[^/]+\/__agent(?:\/|$)/.test(input)) error('agent internal route cannot be public/whitelisted', where);
+function validateHttpRouteAccessPath(input, where) {
+  const value = validatePathShape(input, where);
+  if (!value) return;
+  const core = value.endsWith('/*') ? (value.slice(0, -2) || '/') : value;
+  if (value === '/' || value === '/*') error('root path cannot be declared in route access policy', where);
+  if (INTERNAL_EXACT.has(core)) error('internal route is not route-access controlled', where);
+  if (core === '/auth' || core.startsWith('/auth/')) error('auth routes are not route-access controlled', where);
+  if (core === '/admin' || core.startsWith('/admin/')) error('admin routes are not route-access controlled', where);
+  if (hasInternalAgentSegment(core)) error('agent internal route cannot be route-access controlled', where);
+  const firstSegment = core.split('/').filter(Boolean)[0] || '';
+  if (ROUTER_OWNED_FIRST_SEGMENTS.has(firstSegment)) error(`router-owned route segment ${firstSegment} is not route-access controlled`, where);
+}
+
+function validateManifestRouteAccessPath(input, where) {
+  const raw = typeof input === 'string' && input.startsWith('/') ? input : `/${input ?? ''}`;
+  const value = validatePathShape(raw, where);
+  if (!value) return;
+  const core = value.endsWith('/*') ? (value.slice(0, -2) || '/') : value;
+  if (value === '/' || value === '/*') error('manifest routerAccess.httpRoutes cannot declare the agent root', where);
+  if (hasInternalAgentSegment(core)) error('manifest routerAccess.httpRoutes cannot expose __agent routes', where);
+}
+
+function validateServicePrefix(input, where, { internal = false } = {}) {
+  const value = validatePathShape(input, where, { allowWildcard: false });
+  if (!value) return;
+  if (hasInternalAgentSegment(value)) error(`${internal ? 'internal' : 'external'} service prefix cannot target __agent routes`, where);
+  if (!value.endsWith('/')) warn('service prefixes should end with / to avoid ambiguous matching', where);
 }
 
 function validateEnableEntry(entry, where) {
@@ -156,24 +235,74 @@ function validateServices(manifest, kind) {
       error('service entry must be an object', where);
       return;
     }
+    for (const field of REMOVED_SERVICE_SPEC_FIELDS) {
+      if (Object.prototype.hasOwnProperty.call(service, field)) {
+        error(`HTTP service field ${field} was removed; use access: public, guest, or authenticated`, where);
+      }
+    }
+    const access = service.access;
+    if (!HTTP_ROUTE_ACCESS.has(String(access || ''))) {
+      error('HTTP service requires access: public, guest, or authenticated', `${where}.access`);
+    }
     const external = service.externalPrefix ?? service.prefix ?? service.path;
-    if (external !== undefined) validatePublicPolicyPath(external, `${where}.externalPrefix`);
-    const auth = service.auth;
-    if (auth !== undefined) {
-      const known = new Set(['none', 'public', 'anonymous', 'guest', 'visitor', 'protected', 'authenticated', 'auth', 'local', 'sso']);
-      if (!known.has(String(auth))) error(`unknown auth mode ${auth}`, where);
+    if (external !== undefined) validateServicePrefix(external, `${where}.externalPrefix`);
+    if (external === undefined && !service.slug && !service.name) {
+      error('HTTP service needs slug/name or an explicit externalPrefix', where);
     }
-    if (kind === 'publicServices') {
-      if (auth && !['none', 'public', 'anonymous'].includes(String(auth))) {
-        warn(`publicServices normally default anonymous; explicit auth ${auth} changes semantics`, where);
-      }
-      if (service.includeAuthInfo !== false) {
-        warn('publicServices should usually set includeAuthInfo:false unless anonymous auth context is intentional', where);
-      }
+    const internal = service.internalPrefix ?? service.targetPrefix ?? service.upstreamPrefix;
+    if (internal !== undefined) validateServicePrefix(internal, `${where}.internalPrefix`, { internal: true });
+    if (Array.isArray(service.delegations) && service.access !== 'authenticated') {
+      error('delegations are only supported for authenticated HTTP services', `${where}.delegations`);
     }
-    if (service.invocation === false) {
+    if (service.access === 'public' && service.includeAuthInfo === true) {
+      warn('public HTTP services do not receive router auth info even if includeAuthInfo is true', where);
+    }
+    if (service.access === 'public' && service.invocation !== false) {
+      info('public HTTP service will not receive invocation metadata by default', where);
+    } else if (service.invocation === false) {
       info('invocation token disabled for this service', where);
     }
+  });
+}
+
+function getManifestRouteSpecs(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.map((spec) => ({ spec }));
+  if (isPlainObject(value)) {
+    return Object.entries(value).map(([routePath, routeValue]) => ({
+      spec: isPlainObject(routeValue) ? { path: routePath, ...routeValue } : { path: routePath, access: routeValue }
+    }));
+  }
+  return [{ spec: value }];
+}
+
+function validateManifestRouteAccess(manifest) {
+  const where = 'manifest.routerAccess.httpRoutes';
+  const routerAccess = manifest.routerAccess;
+  if (routerAccess === undefined) return;
+  if (!isPlainObject(routerAccess)) {
+    error('routerAccess must be an object', 'manifest.routerAccess');
+    return;
+  }
+  const httpRoutes = routerAccess.httpRoutes;
+  if (httpRoutes === undefined) return;
+  if (!Array.isArray(httpRoutes) && !isPlainObject(httpRoutes)) {
+    error('httpRoutes must be an array or object', where);
+    return;
+  }
+  getManifestRouteSpecs(httpRoutes).forEach(({ spec }, index) => {
+    const entryWhere = `${where}[${index}]`;
+    if (!isPlainObject(spec)) {
+      error('route access entry must be an object or object-map value', entryWhere);
+      return;
+    }
+    if (Object.prototype.hasOwnProperty.call(spec, 'mode')) {
+      error('routerAccess.httpRoutes entries must use access, not mode', entryWhere);
+    }
+    if (!HTTP_ROUTE_ACCESS.has(String(spec.access || ''))) {
+      error('access must be public, guest, or authenticated', `${entryWhere}.access`);
+    }
+    validateManifestRouteAccessPath(spec.path, `${entryWhere}.path`);
   });
 }
 
@@ -222,9 +351,12 @@ function validateManifest(manifest, manifestPath) {
     entries.forEach((entry, i) => validateEnableEntry(entry, `manifest.enable[${i}]`));
   }
 
-  if (manifest.guest === true) warn('guest:true exposes guest-auth behavior; verify routes are safe and readonly where applicable', where);
+  if (manifest.guest === true) warn('guest:true enables guest-capable routing; verify guest exposure is deliberate', where);
   validateServices(manifest, 'httpServices');
-  validateServices(manifest, 'publicServices');
+  if (manifest.publicServices !== undefined) {
+    error('publicServices was removed; use httpServices with access: public', 'manifest.publicServices');
+  }
+  validateManifestRouteAccess(manifest);
 
   if (manifest.endpoints?.chatCompletions) {
     warn('/v1/chat/completions configured; verify it cannot invoke admin/internal tools implicitly', 'manifest.endpoints.chatCompletions');
@@ -341,7 +473,10 @@ function validatePolicyState(policy, policyPath, derivedPolicy) {
       error('httpRoute entry must be an object', where);
       return;
     }
-    validatePublicPolicyPath(route.path, `${where}.path`);
+    validateHttpRouteAccessPath(route.path, `${where}.path`);
+    if (!HTTP_ROUTE_ACCESS.has(String(route.access || ''))) {
+      error('httpRoutes entries require access: public, guest, or authenticated', `${where}.access`);
+    }
     if (httpSeen.has(route.path)) error(`duplicate http route ${route.path}`, where);
     httpSeen.add(route.path);
     if (route.enabled !== undefined && typeof route.enabled !== 'boolean') warn('enabled should be boolean', where);

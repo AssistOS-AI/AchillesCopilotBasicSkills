@@ -7,13 +7,13 @@ description: Use this skill to create, update, review, and secure Ploinky agents
 
 ## Use this skill when a Ploinky agent might change.
 
-Use this skill whenever the task touches a Ploinky agent, its runtime configuration, its MCP configuration, its router policy, its public or protected HTTP exposure, its chat completions endpoint, or its agent-to-agent behavior. Treat every change as security-sensitive until the repository proves otherwise.
+Use this skill whenever the task touches a Ploinky agent, its runtime configuration, its MCP configuration, its router policy, its public, guest, or authenticated HTTP exposure, its chat completions endpoint, or its agent-to-agent behavior. Treat every change as security-sensitive until the repository proves otherwise.
 
 A Ploinky agent is a repository-owned runtime component discovered from an installed repository. The usual discovery path is `.ploinky/repos/<repo>/<agent>/manifest.json`. The canonical agent id is always `agent:<repo>/<agent>`. A route alias may change the URL prefix used by humans and clients, but an alias must not change the agent id.
 
 ## Load only the context that the edit requires.
 
-Start with this file. Open `references/ploinky-agent-reference.md` when the task requires the agent model, runtime surfaces, routing behavior, endpoint behavior, or MCP proxy behavior. Open `references/config-files.md` when the task requires exact `manifest.json`, `mcp-config.json`, service route, policy-state, or example-file shapes. Open `references/security-invariants.md` when the task touches authentication, authorization, JWTs, request signing, policy, HTTP whitelist behavior, public services, or agent-to-agent calls. Open `references/workflows.md` when creating a new agent, updating an existing agent, or reviewing a security-sensitive diff. Open `references/code-examples.md` when implementing a Node.js tool, signing an agent assertion, computing a request hash, or writing a safe HTTP service handler. Run `scripts/validate-ploinky-agent.mjs` whenever a concrete agent directory or policy state is available. Invoke the `gamp-specs` skill against the repository that owns the agent whenever a change must regenerate that repository's specifications and documentation; the DS specifications of that repository are the source of truth, and this skill folder is not.
+Start with this file. Open `references/ploinky-agent-reference.md` when the task requires the agent model, runtime surfaces, routing behavior, endpoint behavior, or MCP proxy behavior. Open `references/config-files.md` when the task requires exact `manifest.json`, `mcp-config.json`, service route, policy-state, or example-file shapes. Open `references/security-invariants.md` when the task touches authentication, authorization, JWTs, request signing, policy, HTTP route access behavior, HTTP services, or agent-to-agent calls. Open `references/workflows.md` when creating a new agent, updating an existing agent, or reviewing a security-sensitive diff. Open `references/code-examples.md` when implementing a Node.js tool, signing an agent assertion, computing a request hash, or writing a safe HTTP service handler. Run `scripts/validate-ploinky-agent.mjs` whenever a concrete agent directory or policy state is available. Invoke the `gamp-specs` skill against the repository that owns the agent whenever a change must regenerate that repository's specifications and documentation; the DS specifications of that repository are the source of truth, and this skill folder is not.
 
 ## Think in three surfaces.
 
@@ -27,7 +27,7 @@ The router surface is the public `RoutingServer`. The router owns authentication
 
 Do not expose an agent's application surfaces — its HTTP endpoints, `/<agent>/mcp`, tools, resources, task-status, or chat-completions — on agent container or localhost host ports directly to external clients. For those surfaces the router is the only public entrypoint: agents receive requests only after the router authenticates the caller, applies policy, strips unsafe client-supplied internal headers, mints a short-lived authorization for the target agent, and proxies the request.
 
-A declared media or data plane is the narrow exception. A real-time transport the HTTP router cannot proxy — for example a WebRTC SFU such as LiveKit — may be reached by clients directly on a separate public surface, but only when the access credential is minted by a router-authenticated control-plane call, the plane verifies that credential itself, and the direct exposure is an explicit manifest or spec decision. The router still owns the control plane (credential issuance, policy, auth) for that capability, and the direct surface is usually its own dedicated infrastructure agent rather than the application agent's MCP or HTTP port. Treat that credential as a separate, app-owned token family, not one of the three Ploinky JWT families. Default remains router-only.
+A declared media or data plane is the narrow exception. A real-time transport the HTTP router cannot proxy — for example a WebRTC SFU such as LiveKit — may be reached by clients directly on a separate public surface, but only when the access credential is minted by a router-authenticated control-plane call, the plane verifies that credential itself, and the direct exposure is an explicit manifest or spec decision. The router still owns the control plane (credential issuance, policy, auth) for that capability, and the direct surface is usually its own dedicated infrastructure agent rather than the application agent's MCP or HTTP port. Treat that credential as a separate, app-owned token family, not one of the Ploinky session, agent assertion, router request, or delegation token families. Default remains router-only.
 
 ## Preserve agent identity.
 
@@ -37,9 +37,9 @@ The agent id is `agent:<repo>/<agent>`. The repository name and agent directory 
 
 `PLOINKY_MASTER_KEY` belongs to the router or launcher. It must not be injected into an agent, committed to configuration, copied into examples, printed in logs, or placed in tests. Each agent receives only `PLOINKY_AGENT_ID` and its own `PLOINKY_AGENT_SECRET`. An agent must never receive another agent's secret.
 
-## Preserve the direction of each JWT family.
+## Preserve the direction of each token family.
 
-A User Session JWT goes from client to router and terminates at the router. An Agent Assertion JWT goes from source agent to router and proves the source agent knows its own secret. A Router Request JWT goes from router to target AgentServer and authorizes one concrete internal request. Never forward a raw user session token to an AgentServer.
+A User Session JWT or Guest Session JWT goes from client to router and terminates at the router. An Agent Assertion JWT goes from source agent to router and proves the source agent knows its own secret. A Router Request JWT goes from router to target AgentServer and authorizes one concrete internal request. A User Delegation Grant is minted only for an authenticated user, never a guest. Never forward a raw user or guest session token to an AgentServer.
 
 ## Preserve request binding.
 
@@ -57,7 +57,7 @@ A tool with missing tags or an empty tag list is `authenticated`, which means it
 
 ## Preserve HTTP route safety.
 
-HTTP whitelist behavior is separate from MCP policy. HTTP whitelist decisions use a normalized path and readonly methods. MCP policy decisions use `agent + tool`. Query strings must not decide whitelist access. A wildcard is valid only as a suffix in the form `/*`. Internal routes such as `/auth/*`, `/whitelist/command`, `/__agent/*`, `/<agent>/__agent/*`, `/metrics`, and `/health/internal` must not be whitelisted.
+HTTP route access is separate from MCP policy. HTTP route access decisions use a normalized path, an access value, and the HTTP method. MCP policy decisions use `agent + tool`. Valid HTTP route access values are exactly `public`, `guest`, and `authenticated`; valid MCP policy values are `authenticated`, `internal`, and `admin`. `public` HTTP routes are explicitly declared and readonly, so only `GET` and `HEAD` are allowed. `guest` routes may mint or reuse a scoped guest session, while `authenticated` routes require a real user session. Query strings must not decide route access. A wildcard is valid only as a suffix in the form `/*`. Internal and router-owned routes such as `/policy/command`, `/auth/*`, `/admin/*`, `/__agent/*`, `/<agent>/__agent/*`, `/metrics`, `/health`, `/health/internal`, and `/whitelist/*` must not be route-access controlled. The retired `/whitelist` surface should return `404`.
 
 ## Preserve chat completions as a non-privileged surface.
 
@@ -65,11 +65,11 @@ An OpenAI-compatible `/v1/chat/completions` endpoint does not receive implicit a
 
 ## Map identity before editing.
 
-Before changing files, identify the installed repository name, agent directory name, canonical agent id, route key, alias, runtime mode, public paths, service routes, tool names, resource names, prompt names, and persisted policy entries. Locate `manifest.json`, `mcp-config.json`, tool commands, service handlers, chat handlers, tests, routing state, and policy state when they exist.
+Before changing files, identify the installed repository name, agent directory name, canonical agent id, route key, alias, runtime mode, route access declarations, service routes, tool names, resource names, prompt names, and persisted policy entries. Locate `manifest.json`, `mcp-config.json`, tool commands, service handlers, chat handlers, tests, routing state, and policy state when they exist.
 
 ## Classify the requested change before editing.
 
-Decide whether the task is config-only, code-changing, or security-sensitive. Config-only work usually touches manifests, MCP config, profiles, dependencies, service routes, or policy state. Code-changing work touches tool commands, resource commands, HTTP handlers, chat handlers, or runtime startup. Security-sensitive work touches JWT logic, request hashes, auth headers, policy, whitelist entries, public services, guest mode, or agent-to-agent calls.
+Decide whether the task is config-only, code-changing, or security-sensitive. Config-only work usually touches manifests, MCP config, profiles, dependencies, service routes, or policy state. Code-changing work touches tool commands, resource commands, HTTP handlers, chat handlers, or runtime startup. Security-sensitive work touches token logic, request hashes, auth headers, policy, route access entries, HTTP services, guest mode, or agent-to-agent calls.
 
 ## Treat the owning repository's specs as the source of truth.
 
@@ -81,7 +81,7 @@ Prefer minimal diffs. Preserve existing agent ids, route keys, aliases, tool nam
 
 ## Validate configuration after editing.
 
-`manifest.json` must remain valid JSON and must describe runtime intent clearly. `mcp-config.json` may define `tools`, `resources`, and `prompts`. Tool names must be unique inside the agent. Commands must be explicit. Input schemas should be narrow. Tool tags must be valid and non-ambiguous. `httpServices` should be protected unless the intended exposure is different. `publicServices` should be anonymous only when anonymous exposure is safe.
+`manifest.json` must remain valid JSON and must describe runtime intent clearly. `mcp-config.json` may define `tools`, `resources`, and `prompts`. Tool names must be unique inside the agent. Commands must be explicit. Input schemas should be narrow. Tool tags must be valid and non-ambiguous. `routerAccess.httpRoutes` entries must use `access`, not `mode`, and the access must be `public`, `guest`, or `authenticated`. `httpServices` must use `access`; the retired fields `auth`, `mode`, `forceGuest`, and `publicServices` are invalid. Public HTTP services do not receive router auth info or invocation metadata by default, guest services are guest-capable, and delegations are allowed only on authenticated services.
 
 ## Validate authorization after editing.
 
@@ -103,4 +103,4 @@ After any change to a Ploinky agent or to the Ploinky runtime, bring the owning 
 
 ## Finish with a risk-focused summary.
 
-A change is done when the agent is discoverable from `manifest.json`, the MCP config is valid, tool tags are intentional, policy behavior is explicit, agent identity is stable, router-mediated exposure is preserved (agent application surfaces stay behind the router and any direct media or data plane is a declared, control-plane-gated exception), agent-to-agent calls go through the router, public HTTP exposure is readonly and intentional, the owning repository's specifications and documentation have been resynchronized with `gamp-specs` so the specifications remain the source of truth, and no raw secrets or full JWTs were added to code, config, logs, tests, or examples. The final response should call out security-impacting changes, validation results, the specification resynchronization status, and any assumption made because repository code or runtime state was unavailable.
+A change is done when the agent is discoverable from `manifest.json`, the MCP config is valid, tool tags are intentional, policy behavior is explicit, agent identity is stable, router-mediated exposure is preserved (agent application surfaces stay behind the router and any direct media or data plane is a declared, control-plane-gated exception), agent-to-agent calls go through the router, public HTTP exposure is readonly and intentional, guest and authenticated HTTP exposure are deliberate, the owning repository's specifications and documentation have been resynchronized with `gamp-specs` so the specifications remain the source of truth, and no raw secrets or full JWTs were added to code, config, logs, tests, or examples. The final response should call out security-impacting changes, validation results, the specification resynchronization status, and any assumption made because repository code or runtime state was unavailable.

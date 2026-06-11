@@ -29,9 +29,17 @@ A safe MCP-first manifest usually lets the bundled AgentServer own `/mcp` and ma
       "slug": "explorer-api",
       "externalPrefix": "/services/explorer-api/",
       "internalPrefix": "/api/",
-      "auth": "authenticated"
+      "access": "authenticated"
     }
   ],
+  "routerAccess": {
+    "httpRoutes": [
+      {
+        "path": "/public-view/*",
+        "access": "public"
+      }
+    ]
+  },
   "endpoints": {
     "agent-card": {
       "name": "Explorer",
@@ -181,7 +189,7 @@ The tags in `mcp-config.json` are default policy hints. They are not the permane
 
 ## How should router policy state look?
 
-Router policy state uses a `router-policy` schema. `httpRoutes` controls guest readonly HTTP access by normalized path. `mcpTools` controls MCP access by `agent + tool`. Missing MCP policy means deny.
+Router policy state uses a `router-policy` schema. `httpRoutes` controls HTTP route access by normalized path and explicit access value. Valid HTTP route access values are `public`, `guest`, and `authenticated`. `public` is readonly and allows only `GET` and `HEAD`; `guest` may mint or reuse a scoped guest session; `authenticated` requires a real user session. `mcpTools` controls MCP access by `agent + tool`, using the separate access values `authenticated`, `internal`, and `admin`. Missing MCP policy means deny.
 
 ```json
 {
@@ -189,6 +197,7 @@ Router policy state uses a `router-policy` schema. `httpRoutes` controls guest r
   "httpRoutes": [
     {
       "path": "/explorer/public-view/folder/*",
+      "access": "public",
       "enabled": true,
       "createdAt": "2026-06-03T10:00:00.000Z",
       "createdBy": "user:admin-user-id",
@@ -228,12 +237,12 @@ Policy writes should be atomic. The router should write a temporary file, rename
 The audit log should be JSONL append-only. It should log identifiers and decisions, not raw secrets or complete tokens.
 
 ```jsonl
-{"ts":"2026-06-03T10:00:00.000Z","user":"user:admin-user-id","command":"mcp.policy.set","agent":"explorer","tool":"index_refresh_internal","ok":true}
+{"ts":"2026-06-03T10:00:00.000Z","user":"user:admin-user-id","command":"http.route.set","path":"/explorer/public-view/folder/*","access":"public","ok":true}
 ```
 
 ## How should HTTP service declarations be written?
 
-`httpServices` is for protected or authenticated service routes. It defaults to protected auth and public path prefix `/services/<slug>/`. Use it when the router should authenticate the caller and intentionally inject router auth context into the upstream agent request.
+`httpServices` declares additional router-mounted HTTP services. Each service must set `access` to `public`, `guest`, or `authenticated`. Retired fields such as `auth`, `mode`, and `forceGuest` are invalid and cause the service not to mount. Authenticated services default to `/services/<slug>/`; public and guest services default to `/public-services/<slug>/`.
 
 ```json
 {
@@ -242,32 +251,55 @@ The audit log should be JSONL append-only. It should log identifiers and decisio
       "slug": "explorer-api",
       "externalPrefix": "/services/explorer-api/",
       "internalPrefix": "/api/",
-      "auth": "authenticated",
+      "access": "authenticated",
       "includeAuthInfo": true
     }
   ]
 }
 ```
 
-`publicServices` is for anonymous service routes. It defaults to public path prefix `/public-services/<slug>/`. Use it only when anonymous exposure is safe. Prefer `includeAuthInfo: false` unless the anonymous auth context is intentionally needed.
+Public services are declared through `httpServices` with `access: "public"`. Public services do not receive router auth info or invocation metadata by default. Guest services use `access: "guest"` and are guest-capable; they prefer an existing user session and otherwise mint or reuse a scoped guest session. Delegations are allowed only for authenticated services.
 
 ```json
 {
-  "publicServices": [
+  "httpServices": [
     {
       "slug": "public-docs",
       "externalPrefix": "/public-services/public-docs/",
       "internalPrefix": "/public-view/",
-      "auth": "anonymous",
+      "access": "public",
       "includeAuthInfo": false
     }
   ]
 }
 ```
 
-## How should HTTP whitelist paths be written?
+## How should manifest route access be written?
 
-A whitelist path must start with `/`, must be normalized, and must not include URL schemes, fragments, backslashes, null bytes, double slashes, encoded slashes, encoded backslashes, or path traversal. Query strings do not participate in the whitelist decision. A wildcard may appear only at the end as `/*`.
+An agent manifest can declare HTTP route access under `routerAccess.httpRoutes`. These paths are agent-relative: `"/public-view/*"` under route key `explorer` becomes `"/explorer/public-view/*"` at the router. Entries must use `access`, not `mode`, and access must be `public`, `guest`, or `authenticated`. The agent root `/` and `/*` are invalid, and `__agent` paths are never publicable.
+
+```json
+{
+  "routerAccess": {
+    "httpRoutes": [
+      {
+        "path": "/public-view/*",
+        "access": "public"
+      },
+      {
+        "path": "/guest-preview/*",
+        "access": "guest"
+      }
+    ]
+  }
+}
+```
+
+Manifest route access is not persisted into `policy-state.json`; it is part of the effective router decision while the agent is enabled.
+
+## How should HTTP route access paths be written?
+
+A route access path must start with `/`, must be normalized, and must not include URL schemes, fragments, backslashes, null bytes, double slashes, encoded slashes, encoded backslashes, or path traversal. Query strings do not participate in the route access decision. A wildcard may appear only at the end as `/*`.
 
 These paths are valid examples.
 
@@ -287,21 +319,23 @@ explorer/public-view/file.md
 /explorer/public-view/folder/*/edit
 ```
 
-Internal routes must not be whitelisted at write time or at match time. This rule prevents a corrupted policy file from accidentally opening a private route.
+Internal and router-owned routes must not be route-access controlled at write time or at match time. This rule prevents a corrupted policy file from accidentally opening a private route or creating misleading dead policy.
 
 ```text
-/whitelist/command
+/policy/command
 /auth/*
 /admin/*
 /__agent/*
 /<agent>/__agent/*
 /metrics
+/health
 /health/internal
+/whitelist/*
 ```
 
 ## Which config patterns are dangerous?
 
-A manifest is dangerous when it hardcodes a master key, user session token, agent assertion token, router request token, password, or agent secret. A manifest is also risky when it uses `guest: true`, `publicServices`, or a custom startup command without clear readiness and exposure semantics.
+A manifest is dangerous when it hardcodes a master key, user session token, guest session token, agent assertion token, router request token, password, or agent secret. A manifest is also risky when it uses `guest: true`, declares public or guest `routerAccess.httpRoutes` without review, declares public HTTP services, or uses a custom startup command without clear readiness and exposure semantics.
 
 ```json
 {
@@ -331,4 +365,4 @@ An MCP config is dangerous when a tool combines `internal` and `admin`, uses unk
 }
 ```
 
-A policy state is dangerous when it silently grants access to tools that have no deliberate policy, marks internal tools as admin for convenience, allows agents to call admin tools, or whitelists internal routes.
+A policy state is dangerous when it silently grants access to tools that have no deliberate policy, marks internal tools as admin for convenience, allows agents to call admin tools, omits `access` from `httpRoutes`, uses retired HTTP access values, or route-access controls internal routes.

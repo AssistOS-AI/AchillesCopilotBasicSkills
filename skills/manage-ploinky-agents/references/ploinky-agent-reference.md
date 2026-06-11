@@ -22,9 +22,9 @@ The nested field `readiness.protocol` can be `tcp`, `mcp`, or `none`. The field 
 
 The fields `env` and profile-level `env` describe environment variables copied from the process environment, `.ploinky/.secrets`, `.env`, generated secrets, or explicit values. Wildcards may be supported by the runtime, but raw secrets should not be committed into manifests. The fields `ports` and profile-level `ports` declare port mappings. When no port mapping is present, Ploinky publishes container port `7000` on a random localhost host port.
 
-The field `guest: true` enables guest auth mode for the route. The value `ploinky: "pwd enable"` enables local password auth unless overridden. The value `ploinky: "sso enable"` enables SSO auth unless overridden. The field `pwd.users` seeds local users when local auth is enabled.
+The field `guest: true` enables guest-capable auth mode for the route. The value `ploinky: "pwd enable"` enables local password auth unless overridden. The value `ploinky: "sso enable"` enables SSO auth unless overridden. The field `pwd.users` seeds local users when local auth is enabled.
 
-The field `httpServices` exposes protected or authenticated HTTP service routes through the router. The field `publicServices` exposes anonymous HTTP service routes through the router. The nested field `endpoints["agent-card"]` defines the agent-card payload returned by the agent-side `/agent-card`. The nested field `endpoints.chatCompletions` configures the OpenAI-compatible `/v1/chat/completions` command. The field `ssoProvider: true` marks the agent as an SSO provider candidate. The nested field `runtime.resources` describes runtime resource requests used by the installed-agent index.
+The field `routerAccess.httpRoutes` declares agent-relative HTTP route access using `access: "public"`, `access: "guest"`, or `access: "authenticated"`. The field `httpServices` exposes additional HTTP service routes through the router and must use the same `access` vocabulary. Retired service fields such as `auth`, `mode`, `forceGuest`, and `publicServices` are invalid. The nested field `endpoints["agent-card"]` defines the agent-card payload returned by the agent-side `/agent-card`. The nested field `endpoints.chatCompletions` configures the OpenAI-compatible `/v1/chat/completions` command. The field `ssoProvider: true` marks the agent as an SSO provider candidate. The nested field `runtime.resources` describes runtime resource requests used by the installed-agent index.
 
 ## How does enable grammar work?
 
@@ -110,7 +110,7 @@ Before a tool command runs, the server calls invocation verification. The tool r
 
 An async tool is backed by the task queue. The default task queue persists under `.tasksQueue`, limits concurrent tasks to ten unless configured, and stores log tails with a default cap of one hundred twenty-eight KiB. Pending or running tasks found after a restart are marked failed. An async tool result includes task metadata, and the browser MCP client polls the task-status endpoint until completion or failure.
 
-A resource entry is registered with `server.registerResource()`. It can use a fixed `uri` or a template. Resource reads are protected by invocation verification with the expected tool name `resources/read`. The resource command receives JSON on standard input and returns resource content through standard output.
+A resource entry is registered with `server.registerResource()`. It can use a fixed `uri` or a template. Resource reads are guarded by invocation verification with the expected tool name `resources/read`. The resource command receives JSON on standard input and returns resource content through standard output.
 
 ```json
 {
@@ -124,7 +124,7 @@ A prompt entry is registered with `server.registerPrompt()`. Prompt definitions 
 
 ## Which agent-side HTTP endpoints exist?
 
-The bundled agent runtime serves `/health`, `/agent-card`, `/mcp`, `/task`, `/getTaskStatus`, `/v1/chat/completions`, and static files. `GET /health` returns a health JSON. `GET /agent-card` reads `manifest.endpoints["agent-card"]` and returns a normalized card, or returns `404` when no card exists. `POST /mcp`, `GET /mcp`, and `DELETE /mcp` implement Streamable HTTP MCP sessions. `GET /task` and `GET /getTaskStatus` expose secure task-status lookup. `POST /v1/chat/completions` is available when `manifest.endpoints.chatCompletions` is configured. Static file serving runs after protected runtime endpoints and performs path traversal checks.
+The bundled agent runtime serves `/health`, `/agent-card`, `/mcp`, `/task`, `/getTaskStatus`, `/v1/chat/completions`, and static files. `GET /health` returns a health JSON. `GET /agent-card` reads `manifest.endpoints["agent-card"]` and returns a normalized card, or returns `404` when no card exists. `POST /mcp`, `GET /mcp`, and `DELETE /mcp` implement Streamable HTTP MCP sessions. `GET /task` and `GET /getTaskStatus` expose secure task-status lookup. `POST /v1/chat/completions` is available when `manifest.endpoints.chatCompletions` is configured. Static file serving runs after guarded runtime endpoints and performs path traversal checks.
 
 The chat completions handler sends its command a payload with endpoint name, request body, agent metadata, and auth information. Non-stream responses must be JSON. Streaming is allowed only when the manifest configuration supports streaming. The chat completions endpoint is not privileged and must not implicitly invoke `admin` or `internal` tools.
 
@@ -159,15 +159,23 @@ For legacy envelopes, the router canonicalizes command names such as `tools/list
 
 The per-agent `/<agent>/mcp` proxy creates a router-side MCP facade for one route and forwards calls to the agent's real `/mcp` endpoint. `GET` returns `405`, `DELETE` closes the proxy session, and `POST` accepts JSON-RPC. `initialize` advertises server name `ploinky-router-proxy:<agent>`. `tools/list` and `resources/list` delegate to the agent. `tools/call` canonicalizes arguments, mints a router-signed invocation JWT, and calls the underlying agent tool. `resources/read` mints an invocation JWT and reads the resource from the underlying agent.
 
-Non-delegated browser or user calls must pass router authentication for the target route. Delegated agent calls use `X-Ploinky-Caller-JWT` and are accepted only for direct JSON-RPC `tools/call` requests.
+Non-delegated browser or user calls must pass router authentication for the target route. Delegated agent calls carry an Agent Assertion JWT in `Authorization: Bearer <token>` and are accepted only for direct JSON-RPC `tools/call` requests. The router verifies the assertion, applies MCP policy, and mints a Router Request JWT for the target AgentServer.
 
 ## How do HTTP service routes work?
 
-Agents can expose additional HTTP services through `httpServices` and `publicServices` in route config or manifest config. `httpServices` defaults to protected auth and external prefix `/services/<slug>/`. `publicServices` defaults to anonymous auth and external prefix `/public-services/<slug>/`. Auth values such as `none`, `public`, and `anonymous` mean anonymous. Auth values such as `guest` and `visitor` mean guest. Auth values such as `protected`, `authenticated`, `auth`, `local`, and `sso` mean protected.
+Agents can expose additional HTTP services through `httpServices` in route config or manifest config. Each service must declare `access: "public"`, `access: "guest"`, or `access: "authenticated"`. Authenticated services default to external prefix `/services/<slug>/`; public and guest services default to `/public-services/<slug>/`. The old `publicServices` collection and old fields `auth`, `mode`, and `forceGuest` are removed and fail closed.
 
 The fields `externalPrefix`, `prefix`, and `path` can override the public path prefix. The fields `internalPrefix`, `targetPrefix`, and `upstreamPrefix` control the upstream path prefix on the agent and default to `/`. The setting `invocation: false` disables invocation-token issue for that route. The setting `includeAuthInfo: false` disables `x-ploinky-auth-info` injection.
 
-Protected and guest service routes receive an `x-ploinky-auth-info` header unless disabled. When invocation is enabled, auth info includes an invocation token for the special tool `__http_service__`. Generic agent-prefixed HTTP passthrough strips router identity headers before proxying. HTTP service routes are the intentional path for injecting auth context.
+Authenticated and guest service routes receive an `x-ploinky-auth-info` header unless disabled. Public service routes do not receive router auth info or invocation metadata by default. When invocation is enabled, auth info includes an invocation token for the special tool `__http_service__`. Generic agent-prefixed HTTP passthrough strips router identity headers before proxying. HTTP service routes are the intentional path for injecting auth context.
+
+## How does HTTP route access work?
+
+HTTP route access is evaluated separately from MCP policy. The effective decision can come from persisted `policy-state.json` `httpRoutes`, manifest `routerAccess.httpRoutes`, `httpServices`, or route defaults. Overlapping entries merge restrictively, with `authenticated` stricter than `guest`, and `guest` stricter than `public`. Public routes are readonly: non-`GET` and non-`HEAD` requests are denied even when the path matches.
+
+Manifest `routerAccess.httpRoutes` entries are agent-relative. For an enabled route key `demo`, a manifest entry `{ "path": "/public-view/*", "access": "public" }` controls `/demo/public-view/*`. Manifest entries must use `access`, not `mode`, cannot declare `/` or `/*`, and cannot expose `__agent` control-plane paths. Persisted policy entries are router-absolute and must also include `access`.
+
+Administrative HTTP route changes use `POST /policy/command` with commands such as `http.route.set`, `http.route.remove`, `http.route.check`, and `http.route.list`. The retired `/whitelist` and `/whitelist/*` routes should return `404`.
 
 ## What operational details matter during edits?
 

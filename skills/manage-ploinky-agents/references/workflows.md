@@ -6,7 +6,7 @@ This reference describes the practical workflow for creating, updating, and revi
 
 Choose the repository name and agent directory name before defining policies. The canonical agent id will be `agent:<repo>/<agent>`, and policy entries will depend on that identity. Treat the agent id as durable. Decide whether the public route key is the short agent name or an alias, and remember that an alias is only a routing label.
 
-Create `manifest.json` before writing tool code. Prefer the bundled AgentServer when the agent is MCP-first. Set `readiness.protocol` explicitly so startup behavior is obvious. Add `httpServices` only when the agent truly needs protected HTTP routes. Add `publicServices` only when anonymous exposure is intentional and safe. Keep raw secrets out of the manifest.
+Create `manifest.json` before writing tool code. Prefer the bundled AgentServer when the agent is MCP-first. Set `readiness.protocol` explicitly so startup behavior is obvious. Add `routerAccess.httpRoutes` only when the agent truly needs public, guest, or authenticated path overrides. Add `httpServices` only when the agent truly needs service routes, and set `access` explicitly to `public`, `guest`, or `authenticated`. Keep raw secrets out of the manifest.
 
 Create `mcp-config.json` one narrow tool at a time. Give each tool a stable name, clear title, clear description, explicit command, working directory, timeout, and strict input schema. Leave tags missing for ordinary authenticated-user tools. Use `internal` only for agent-to-agent tools. Use `admin` only for user-admin tools. Do not combine `internal` and `admin`.
 
@@ -14,7 +14,7 @@ Write tool handlers as standard-input JSON commands. The handler should parse th
 
 Add policy through the router's intended administrative mechanism. Do not let the new agent self-administer policy. Missing policy must mean deny, so a new tool is not ready until its default tag behavior and persisted policy path are understood.
 
-Validate the agent with the bundled validator. Then run the repository tests that cover manifest parsing, route prefixing, MCP proxy behavior, authentication, authorization, policy, and any public service behavior. A new public route deserves skeptical review because it changes the exposed attack surface.
+Validate the agent with the bundled validator. Then run the repository tests that cover manifest parsing, route prefixing, MCP proxy behavior, authentication, authorization, policy, and any public or guest HTTP exposure. A new public route deserves skeptical review because it changes the exposed attack surface.
 
 After the new agent exists, resynchronize the owning repository's specifications and documentation with `gamp-specs`. Add or update the DS specifications that describe the agent's identity, runtime mode, tools, policy expectations, and any service exposure, regenerate the HTML documentation and `docs/specs/matrix.md`, and run that repository's documentation link verification. Treat those specifications as the source of truth that the agent's configuration and code must continue to satisfy.
 
@@ -28,7 +28,7 @@ When adding a tool, check for name collisions inside the agent and check whether
 
 When changing tags, remember that tags are defaults and persisted policy wins. Editing `mcp-config.json` may not change an existing policy entry. Review policy state for the same `agent + tool` and make the intended policy explicit.
 
-When changing an HTTP service, decide whether the route is protected, guest, anonymous, or public protected. Protected service routes can receive router auth info. Generic agent-prefixed passthrough should not receive client-supplied router identity headers. Public service routes should not be used as a shortcut for authenticated behavior.
+When changing an HTTP service, decide whether the route is `public`, `guest`, or `authenticated`. Authenticated and guest service routes can receive router auth info unless disabled. Public service routes do not receive router auth info or invocation metadata by default and should not be used as a shortcut for authenticated behavior. Delegations are allowed only on authenticated services.
 
 When changing chat completions behavior, keep `/v1/chat/completions` non-privileged. The command should not implicitly call `admin` or `internal` tools. If privileged work is needed, expose a properly tagged MCP tool and let router policy decide.
 
@@ -38,7 +38,7 @@ When any change lands, update the affected DS specifications first if the intend
 
 ## How should a security-sensitive diff be reviewed?
 
-Treat JWT logic, request hashes, policy, whitelist entries, service exposure, guest mode, public services, auth headers, and agent-to-agent code as security-sensitive. Confirm that `PLOINKY_MASTER_KEY` is not injected into agents and that each agent receives only its own agent id and secret.
+Treat token logic, request hashes, policy, route access entries, service exposure, guest mode, auth headers, and agent-to-agent code as security-sensitive. Confirm that `PLOINKY_MASTER_KEY` is not injected into agents and that each agent receives only its own agent id and secret.
 
 Confirm that User Session JWTs terminate at the router. The router may use the user identity to make a policy decision and to mint a Router Request JWT, but the raw user session token must not reach AgentServer.
 
@@ -46,7 +46,7 @@ Confirm that agent-to-agent calls go through the router. The source agent signs 
 
 Confirm that request hashes are canonical and deterministic. Object keys should be sorted, array order should be preserved, and `undefined` should be rejected. Non-JSON bodies should be represented by a byte hash. A token with the wrong method, path, tool, audience, issuer, type, or request hash must be rejected.
 
-Confirm that HTTP whitelist behavior is readonly and path-based. Query strings should not decide public access. Wildcards should appear only as a final `/*`. Internal routes should be blocked both when policy is written and when policy is matched.
+Confirm that HTTP route access behavior is path-based and uses only `public`, `guest`, or `authenticated`. Public access must be readonly. Query strings should not decide access. Wildcards should appear only as a final `/*`. Internal and router-owned routes should be blocked both when policy is written and when policy is matched.
 
 Confirm that error messages do not leak private resource existence to guests. Internal logs may contain precise denial reasons, but public errors should remain generic.
 

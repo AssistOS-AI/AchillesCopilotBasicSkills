@@ -1,6 +1,6 @@
 # Which security invariants must never be weakened?
 
-Ploinky security relies on a strict router boundary, separate JWT families, explicit policy, and fail-closed behavior. A coding agent must preserve these invariants even when the requested change appears to be a simple config edit.
+Ploinky security relies on a strict router boundary, separate token families, explicit policy, and fail-closed behavior. A coding agent must preserve these invariants even when the requested change appears to be a simple config edit.
 
 ## The router is the public control point.
 
@@ -16,7 +16,7 @@ A user is a person authenticated to the router. A user may have the role `user` 
 
 An agent is a Ploinky runtime process started by Ploinky. It receives a canonical agent id and one secret at startup. An agent authenticates to the router with an Agent Assertion JWT.
 
-A guest is the absence of a valid user identity and the absence of a valid agent identity. Guest access is allowed only when a readonly HTTP route is explicitly whitelisted or when a route is intentionally configured as anonymous or public protected.
+A guest is a scoped router identity for unauthenticated callers. Guest access is allowed only when HTTP route access or route defaults deliberately allow it. A real user session is preferred when present; otherwise the router may mint or reuse a scoped guest session. A guest session must not satisfy an `authenticated` route and must not receive user delegation grants.
 
 ## Secrets stay separated.
 
@@ -35,7 +35,7 @@ PLOINKY_AGENT_SECRET=<secret-unique-to-this-agent>
 
 An agent must not receive `PLOINKY_MASTER_KEY`, another agent's secret, raw user session tokens, or long-lived router credentials. Raw passwords, raw keys, raw JWTs, and complete secrets must not be logged.
 
-## JWT families are direction-specific.
+## Token families are direction-specific.
 
 All JWTs in this model are JWS tokens using HS256. The application fixes the algorithm and must not accept an algorithm chosen by the token. The header should be standard.
 
@@ -48,9 +48,15 @@ All JWTs in this model are JWS tokens using HS256. The application fixes the alg
 
 A User Session JWT goes from a client to the router. It is signed by the router and verified by the router. Its audience is `ploinky-router`, and its type is `user-session`. It must not be sent onward to an AgentServer.
 
+A Guest Session JWT goes from a guest client to the router. It is signed by the router and verified by the router. Its audience is `ploinky-router`, and its type is `guest-session`. It is scoped and limited; it must not be treated as an authenticated user login.
+
 An Agent Assertion JWT goes from a source agent to the router. It is signed by the source agent using its own `PLOINKY_AGENT_SECRET`. The router derives the source agent's secret from the master key, verifies the HMAC, verifies the request hash, and then applies policy. The token proves identity only. It does not grant access by itself.
 
 A Router Request JWT goes from the router to the target AgentServer. It is signed by the router using the target agent's secret. The target AgentServer verifies it using its own `PLOINKY_AGENT_SECRET`. This token is a short-lived authorization for one concrete internal request. It is not a login session.
+
+A User Delegation Grant is router-issued delegation from an authenticated user to an agent for a narrow target, tool, and scope. It must not be issued for a guest actor or guest user.
+
+Router-side code should use the explicit token services when available: `JwsCodec`, `SessionTokenService`, `AgentAssertionService`, `RouterRequestTokenService`, and `UserDelegationGrantService`. Avoid reintroducing generic token type markers or ad hoc JWT helpers in router security boundaries.
 
 ## User Session JWTs terminate at the router.
 
@@ -75,7 +81,7 @@ A User Session JWT should identify the user, session, roles, revision, issued ti
 }
 ```
 
-If a downstream AgentServer receives a raw user session token, it should ignore or reject it. Protected agent execution should require a Router Request JWT.
+If a downstream AgentServer receives a raw user or guest session token, it should ignore or reject it. Authenticated agent execution should require a Router Request JWT.
 
 ## Agent Assertion JWTs prove source-agent identity.
 
@@ -161,9 +167,9 @@ A source agent must call the router, not a target agent's local port. The source
 
 An agent that knows its own secret can authenticate as itself. That is expected. It must not be able to authenticate as another agent because each agent has a unique secret.
 
-## MCP policy is separate from HTTP whitelist.
+## MCP policy is separate from HTTP route access.
 
-HTTP whitelist uses normalized paths and readonly methods to decide whether a guest may reach an existing HTTP route. MCP policy uses `agent + tool` to decide whether a user or agent may invoke a tool. A route being publicly readable does not imply that any MCP tool is callable. A tool being authenticated does not imply that any HTTP path is public.
+HTTP route access uses normalized paths, access values, and readonly method checks to decide whether a caller may reach an existing HTTP route. MCP policy uses `agent + tool` to decide whether a user or agent may invoke a tool. A route being publicly readable does not imply that any MCP tool is callable. A tool being authenticated does not imply that any HTTP path is public.
 
 Missing MCP policy denies access. Unknown access classes deny access. Unknown tags deny access. Ambiguous tag combinations deny access. Corrupt policy state denies access until repaired.
 
@@ -173,15 +179,17 @@ Missing MCP policy denies access. Unknown access classes deny access. Unknown ta
 
 This separation is deliberate. Admin users do not automatically receive internal access. Agents do not receive admin access. A tool that needs two different audiences should usually be split into two tools with different names, different descriptions, and different policy entries.
 
-## HTTP public access is readonly and path-based.
+## HTTP route access is explicit, path-based, and fail-closed.
 
-A completely public route must be declared explicitly in `httpRoutes`, must be readonly, and must use a normalized path. Only `GET` and `HEAD` should be accepted for completely public guest access. Query strings do not decide public access. Wildcards are suffix-only in the form `/*`. Internal routes are not publicable.
+HTTP route access values are exactly `public`, `guest`, and `authenticated`. `protected`, `anonymous`, `none`, `auth`, and `mode` are retired HTTP route vocabulary and must not be accepted in new configs. A completely public route must be declared explicitly, must be readonly, and must use a normalized path. Only `GET` and `HEAD` should be accepted for public access. Query strings do not decide route access. Wildcards are suffix-only in the form `/*`. Internal and router-owned routes are not publicable.
 
-A public protected route may use an anonymous temporary token or a limited API key. That token is a technical identity for rate limiting, expiration, revocation, blocking, or basic abuse control. It is not a user login and does not replace infrastructure-level anti-DDoS protection.
+Manifest `routerAccess.httpRoutes` entries are agent-relative and must use `access`, not `mode`. Persisted `policy-state.json` `httpRoutes` entries are router-absolute and must include `access`; a missing or invalid access value makes policy state corrupt and should fail closed until repaired. Public or guest declarations in manifests are not persisted policy entries and should be reviewed as part of the agent's manifest contract.
+
+Public or guest routes may use scoped technical identities for rate limiting, expiration, revocation, blocking, or basic abuse control. Those identities are not user logins and do not replace infrastructure-level anti-DDoS protection.
 
 ## Administrative policy changes go through one controlled endpoint.
 
-Administrative operations should go through `POST /whitelist/command`. This endpoint is authenticated and must not be whitelisted. HTTP whitelist commands use the `http.whitelist` namespace. MCP policy commands use the `mcp.policy` namespace. Admin users may manage MCP policy. Agents must not modify policy.
+Administrative operations should go through `POST /policy/command`. This endpoint is authenticated and must not be route-access controlled. HTTP route access commands use the `http.route` namespace: `http.route.set`, `http.route.remove`, `http.route.check`, and `http.route.list`. MCP policy commands use the `mcp.policy` namespace. Admin users may manage MCP policy. Agents must not modify policy.
 
 ```json
 {
