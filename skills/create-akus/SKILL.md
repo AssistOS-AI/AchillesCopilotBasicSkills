@@ -1,13 +1,20 @@
 ---
 name: create-akus
-description: Create a minimal Achilles-compatible Agentic Knowledge Units (.aku) directory from WAC JSON embedded in the prompt, including fetched siteMap documents and valid root indexes.
+description: Create Achilles-compatible Agentic Knowledge Units (.aku) directory from WAC JSON fetched from SITE_URL/WAC.json or a direct WAC URL, including fetched siteMap documents and valid root indexes.
 ---
 
 # Create AKUs
 
 ## Purpose
 
-Use this skill when the prompt contains WAC JSON and asks you to create `.aku/` in the current project directory.
+Use this skill when the user asks to create AKUs.
+
+Behavior rules:
+- Create the AKU project in the current directory under `./<siteId>`.
+- If `siteId` is not provided, derive it from the user URL.
+- If the user provides only a site URL (SITE_URL), fetch WAC data from `SITE_URL/WAC.json`.
+- If the user provides a direct WAC JSON URL, use that exact URL.
+- If SITE_URL is `localhost`/`127.0.0.1`/`::1`, convert it to `host.containers.internal` before fetch.
 
 AKU means Agentic Knowledge Units. A Knowledge Unit (KU) is a local, reusable unit of work or knowledge: a site description, profile, document, specification, research note, result, validation, decision, or useful failure. AKU does not use LLM search infrastructure, embeddings, vector databases, RAG services, or external storage. Your job is to create deterministic local files that Achilles `AgenticKnowledgeUnits` can load and search later.
 
@@ -16,10 +23,12 @@ The WAC JSON has:
 - `profilesInfo`: object mapping profile ids to full profile text.
 - `contactInfo`: contact or local interaction information.
 - `siteMap`: array of absolute URLs. Fetch every URL and use the fetched text as document source material.
+- The `siteMap` URLs come from the fetched `WAC.json` content and must be fetched individually to gather source data for document KUs.
+- For each URL fetched from `WAC.json` (including `WAC.json` fetch path itself when constructed from `SITE_URL`), apply the same localhost rule: if host is `localhost`/`127.0.0.1`/`::1` in container mode, use `host.containers.internal`.
 
 ## Required Minimal Layout
 
-Treat the current working directory as the site project root. Create `.aku/` directly under it.
+Treat `./<siteId>` as the site project root. Create `.aku/` directly under `./<siteId>`.
 
 Root files required by Achilles:
 
@@ -358,6 +367,7 @@ The `sha256`, `bytes`, and `records` values must be calculated after writing or 
 ## Fetching Rules
 
 - Fetch every URL in `siteMap` before creating document KUs.
+- If a `siteMap` URL is localhost-style (`localhost`/`127.0.0.1`/`::1`) , replace host with `host.containers.internal` before fetch.
 - Prefer plain text from the response body. Markdown files should be stored as markdown.
 - If HTTP status is not 2xx or fetch throws, record a fetch failure event and continue with the remaining URLs.
 - Keep fetched content local under `.aku/kus/<ku_id>/documents/source.md`.
