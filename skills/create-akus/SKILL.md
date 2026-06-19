@@ -10,7 +10,7 @@ description: Create Achilles-compatible Agentic Knowledge Units (.aku) directory
 Use this skill when the user asks to create AKUs.
 
 Behavior rules:
-- Create the AKU project in the current directory under `./<siteId>`.
+- Create the AKU project in the current directory under `./sites/<siteId>`.
 - If `siteId` is not provided, derive it from the user URL.
 - If the user provides only a site URL (SITE_URL), fetch WAC data from `SITE_URL/WAC.json`.
 - If the user provides a direct WAC JSON URL, use that exact URL.
@@ -28,7 +28,7 @@ The WAC JSON has:
 
 ## Required Minimal Layout
 
-Treat `./<siteId>` as the site project root. Create `.aku/` directly under `./<siteId>`.
+Treat `./sites/<siteId>` as the site project root. Create `.aku/` directly under `./sites/<siteId>`.
 
 Root files required by Achilles:
 
