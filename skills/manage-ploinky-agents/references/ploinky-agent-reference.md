@@ -8,7 +8,7 @@ An enabled agent can be addressed by its short name or by an alias. An alias bec
 
 ## How does agent workspace layout work?
 
-Ploinky supports isolated, global, and development runtime modes. In isolated mode, the agent works in `.ploinky/agents/<agent>/`. In global mode, the agent works directly in the workspace root. In development mode, the agent works against `.ploinky/repos/<repo>`, which is the installed repository checkout.
+Ploinky supports isolated, global, and development runtime modes. In isolated mode, the agent works in `.data/<agent>/`. In global mode, the agent works directly in the workspace root. In development mode, the agent works against `.ploinky/repos/<repo>`, which is the installed repository checkout.
 
 The workspace also maintains symlinks and shared directories. Agent code is linked under `.ploinky/code/<agent>`, skills are linked under `.ploinky/skills/<agent>`, shared storage lives under `.ploinky/shared`, logs live under `.ploinky/logs`, runtime state lives under `.ploinky/running`, dependencies live under `.ploinky/deps`, and transcripts live under `.ploinky/transcripts`.
 
