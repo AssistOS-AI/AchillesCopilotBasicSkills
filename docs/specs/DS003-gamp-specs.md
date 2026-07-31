@@ -22,6 +22,8 @@ The DS set must carry frontmatter metadata that includes at least `id`, `title`,
 
 The root project template must include `fileSizesCheck.sh`, and `gamp-specs` must carry the same file under `skills/gamp-specs/assets/fileSizesCheck.sh` so new projects can install it as part of initialization. This repository itself must keep repository-wide example code inside the relevant skill folders instead of introducing a shared root `src/` tree that copied skills would not carry with them.
 
+When a target project uses WebSkel, its agent guidance must require `webskel-ui-engineering`, and its coding-style authority must include the skill's MVM, declarative action, lifecycle, template, safe DOM projection, and reusable component contracts.
+
 ## Decisions & Questions
 
 ### Question #1: Why does the bootstrap contract separate skill-catalog documentation from downstream-project documentation?

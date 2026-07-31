@@ -24,6 +24,7 @@ This repository is the standardized, reusable catalog of self-contained skills f
 - `antropic-skill-build`
 - `review-specs`
 - `manage-ploinky-agents`
+- `webskel-ui-engineering`
 
 ## Repository Rules
 
@@ -38,7 +39,7 @@ This repository is the standardized, reusable catalog of self-contained skills f
 - Keep `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/` synchronized when repository rules or the skill catalog change.
 - When a new skill is added under `skills/`, update `AGENTS.md`, `README.md`, `docs/index.html`, the per-skill HTML page set, `docs/specs/matrix.md`, and the relevant DS files in the same change set.
 - When a new skill family, bootstrap rule, coding-style rule, or DS-generation rule is introduced, update `skills/gamp-specs/` in the same change set.
-- Keep DS numbering contiguous with no missing intermediate files. The sequence currently runs from `DS000` through `DS011`, and future additions must extend the sequence without leaving gaps.
+- Keep DS numbering contiguous with no missing intermediate files. The sequence currently runs from `DS000` through `DS012`, and future additions must extend the sequence without leaving gaps.
 - Ordinary DS files must include `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`. In `Decisions & Questions`, use numbered Markdown subchapters such as `### Question #1: ...`, and place the `Response` or `Options` inside that subchapter.
 
 ## Runtime Defaults

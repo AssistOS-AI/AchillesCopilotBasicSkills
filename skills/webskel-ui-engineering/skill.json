@@ -1,0 +1,22 @@
+{
+  "title": "WebSkel UI Engineering",
+  "family": "anthropic",
+  "summary": "Defines the MVM implementation and review contract for every Ploinky agent UI that uses WebSkel.",
+  "aliases": [
+    "webskel-ui-engineering",
+    "webskel-ui"
+  ],
+  "dependsOn": [
+    "gamp-specs",
+    "antropic-skill-build"
+  ],
+  "outputs": [
+    "WebSkel UI changes",
+    "UI review findings"
+  ],
+  "entrypoints": [
+    "SKILL.md",
+    "DS.md"
+  ],
+  "selfContained": true
+}

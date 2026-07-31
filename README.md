@@ -22,6 +22,7 @@ This repository is the standardized, reusable baseline skill catalog for the tea
 - `antropic-skill-build`
 - `review-specs`
 - `manage-ploinky-agents`
+- `webskel-ui-engineering`
 
 ## Documentation Authority
 

@@ -28,6 +28,7 @@ Use `references/docs-structure.md` for layout and file placement, `references/te
 - Use `references/specs-guidelines.md` when writing or revising the DS specifications.
 - Define the DS spec set based on project scope.
 - Always begin with `DS000-vision.md` and `DS001-coding-style.md`.
+- When a project uses WebSkel, make `webskel-ui-engineering` mandatory in its agent guidance and flow its MVM, declarative-action, template, lifecycle, safe-projection, and reusable-component rules into `DS001-coding-style.md`.
 - In a skill-catalog repository, create one DS file for each current skill in the repository, plus any additional DS files needed for shared architectural topics such as model strategy.
 - In a downstream project that only consumes imported skills, keep the DS set focused on the host project itself. Do not create DS files under `docs/specs/` whose subject is the imported skills.
 - Keep the DS sequence contiguous with no missing intermediate numbers. If the repository uses `DS000` through `DS010`, the next new DS must be `DS011`.

@@ -57,9 +57,18 @@ async function readSkillDefinition(repoRoot, skillId) {
 
 async function readSkillCatalog(repoRoot = defaultRepoRoot) {
   const skillEntries = await readdir(resolve(repoRoot, 'skills'), { withFileTypes: true });
-  const skillIds = skillEntries
+  const directoryNames = skillEntries
     .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
+    .map((entry) => entry.name);
+  const catalogCandidates = await Promise.all(
+    directoryNames.map(async (skillId) => ({
+      skillId,
+      files: new Set(await readdir(resolve(repoRoot, 'skills', skillId)))
+    }))
+  );
+  const skillIds = catalogCandidates
+    .filter(({ files }) => requiredSkillFiles.every((requiredFile) => files.has(requiredFile)))
+    .map(({ skillId }) => skillId)
     .sort((left, right) => left.localeCompare(right));
 
   return Promise.all(skillIds.map((skillId) => readSkillDefinition(repoRoot, skillId)));

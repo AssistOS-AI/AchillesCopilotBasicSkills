@@ -19,7 +19,8 @@ test('skill catalog matches the expected repository baseline', async () => {
     'gamp-specs',
     'manage-ploinky-agents',
     'oskill-build',
-    'review-specs'
+    'review-specs',
+    'webskel-ui-engineering'
   ]);
   assert.deepEqual(validateSkillCatalog(catalog), []);
 
