@@ -12,24 +12,21 @@
 </head>
 <body>
   <div data-include="partials/header.html"></div>
-  <main class="page">
-    <div class="page__panel content">
-      <p class="breadcrumb"><a href="index.html">Home</a> / dgskill-build</p>
-      <p class="kicker">Skill Detail</p>
-      <h1>dgskill-build</h1>
-      <p><code>dgskill-build</code> defines the dynamic end of the skill spectrum. It is intended for guarded direct-answer or generated-code workflows where adaptability matters more than durable specification-driven implementation.</p>
-      <table class="meta-table">
-        <tr><th>Depends on</th><td><code>gamp-specs</code>, <code>achilles-specs</code></td></tr>
-        <tr><th>Primary artifact</th><td><code>dgskill.md</code></td></tr>
-        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS007-dgskill-build.md">DS007-dgskill-build.md</a></td></tr>
-      </table>
-      <h2>Design Position</h2>
-      <p>This skill family keeps sandbox policy, prompt guidance, and output normalization explicit. The repository documentation treats these guardrails as first-class design elements rather than incidental implementation notes.</p>
-      <p>The contract backbone belongs in <code>Core Content</code>, while detailed reasoning and open tradeoffs belong in numbered <code>Decisions &amp; Questions</code> entries. That split is especially important here because execution guardrails and temporary code paths change at different rates.</p>
-      <h2>Portability</h2>
-      <p>DGSkill guidance is documented here as a portable skill contract. Downstream projects are expected to copy the skill folder into their own local <code>skills/</code> directory rather than depending on this repository as a shared runtime package, and they should not mirror this imported family guidance under their own <code>docs/</code> tree.</p>
-    </div>
-  </main>
+  <main class="page"><article class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">AchillesCopilotBasicSkills</a> / dgskill-build</p>
+      <p class="kicker">Skill reference</p>
+      <h1>DGSkill Build</h1>
+      <p>Defines adaptive request-local skills that answer directly or generate temporary guarded JavaScript.</p>
+      <h2>Operational contract</h2>
+      <p>The skill requires an explicit decision between textual and procedural output, a bounded prompt, sandbox policy, and normalized results. It is intended for exploratory or one-off work that does not justify a stable generated module.</p>
+      <h2>Local artifacts</h2>
+      <ul><li><code>SKILL.md</code> defines execution modes and guardrails.</li><li><code>DS.md</code> summarizes the dynamic execution boundary.</li><li><code>skill.json</code> declares aliases, dependencies, and the <code>dgskill.md</code> output.</li></ul>
+      <h2>Dependencies and outputs</h2>
+      <p><strong>Declared dependencies:</strong> <code>gamp-specs</code>, <code>achilles-specs</code></p>
+      <p>The descriptor and catalog metadata define the outputs for this skill. Consumers must preserve the complete folder when copying it so referenced files and examples remain available.</p>
+      <h2>Maintenance invariant</h2>
+      <p class="note">Generated code is transient, scope remains request-local, and sandbox and normalization rules are explicit.</p>
+      <p>See <a href="specsLoader.html?spec=DS005-dgskill-build.md">DS005</a> for the authoritative skill contract.</p></article></main>
   <div data-include="partials/footer.html"></div>
   <script src="partials-loader.js"></script>
 </body>

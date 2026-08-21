@@ -1,37 +1,30 @@
 # AchillesCopilotBasicSkills
 
-This repository is the standardized, reusable baseline skill catalog for the team and for downstream projects that use Achilles, our libraries, and our technologies. It combines repository bootstrap guidance, runtime conventions, skill-family construction rules, and self-contained workflow skills with tests and documentation that are expected to evolve together.
+AchillesCopilotBasicSkills is the baseline catalog for authoring skills that AchillesAgentLib can discover, register, prepare, and execute. It defines the recognized descriptor families, their file layouts, runtime boundaries, and portability requirements.
 
-## Repository Structure
+## Using the catalog
 
-- `skills/` contains the canonical skill folders. Each folder is expected to include `SKILL.md`, `DS.md`, `skill.json`, and any local example code or assets required to keep the skill portable.
-- This repository intentionally does not expose a production root `src/` tree. Example code lives under the relevant skill folder so the whole skill can be copied into another project's `skills/` directory.
-- `tests/` is organized by skill as `tests/<skill-name>/` so the validation surface remains modular and easy to inspect. These tests validate example code and repository scripts; they are not production deployment artifacts.
-- `data/` is reserved for runtime-mounted persistent data.
-- `docs/` contains the technical HTML documentation and the DS specification set for this skill-catalog repository itself.
-- Downstream projects that copy these skills should document their own codebase under `docs/`. They should not add DS files or HTML pages there whose subject is the imported skills themselves; skill-specific agent guidance stays inside the copied `skills/<skill-name>/` folders.
+Choose the skill whose description matches the task, read its complete `SKILL.md`, and copy the full `skills/<skill-name>/` directory into the consuming environment. Preserve all local references, examples, scripts, assets, and metadata because they are part of the portable contract.
 
-## Current Skills
+## Skills
 
-- `gamp-specs`
-- `achilles-specs`
-- `article-build`
-- `cskill-build`
-- `dgskill-build`
-- `oskill-build`
-- `antropic-skill-build`
-- `review-specs`
-- `manage-ploinky-agents`
-- `webskel-ui-engineering`
+| Skill | Responsibility |
+| --- | --- |
+| [`achilles-skill-builder`](docs/achilles-skill-builder.html) | Defines the descriptor, layout, discovery, and execution contracts for every AchillesAgentLib skill family. |
+| [`antropic-skill-build`](docs/antropic-skill-build.html) | Defines the self-contained portability baseline for Anthropic-style SKILL.md bundles. |
+| [`cskill-build`](docs/cskill-build.html) | Defines specification-driven, code-backed skills with stable descriptors and generated JavaScript implementations. |
+| [`dgskill-build`](docs/dgskill-build.html) | Defines adaptive request-local skills that answer directly or generate temporary guarded JavaScript. |
+| [`oskill-build`](docs/oskill-build.html) | Defines declarative orchestrators that coordinate bounded sets of skills and Ploinky agents. |
 
-## Documentation Authority
+## Repository layout
 
-- Repository overview: `docs/index.html`
-- Coding style and repository structure: `docs/specsLoader.html?spec=DS001-coding-style.md`
-- LLM routing and model tiers: `docs/specsLoader.html?spec=DS002-llm-model-strategy.md`
-- Full specification matrix: `docs/specsLoader.html?spec=matrix.md`
-- Agent guidance: `AGENTS.md`
+- `skills/` contains the distributed skill folders.
+- `docs/index.html` is the technical documentation entry point.
+- `docs/specs/` contains the authoritative design specifications.
+- `docs/specsLoader.html?spec=matrix.md` opens the generated specification matrix.
+- `AGENTS.md` defines the mandatory reading order for repository work.
+- `fileSizesCheck.sh` checks source-file size and line-length limits.
 
-## Maintenance Rule
+## Maintenance
 
-Whenever a new skill is added or renamed, update the skill catalog, `AGENTS.md`, the HTML documentation, and the DS matrix in the same change set. DS numbering must remain contiguous and gap-free. Ordinary DS files must use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and the `Decisions & Questions` section must use numbered Markdown subchapters such as `### Question #1: ...`.
+When a skill changes, update its descriptor and local artifacts together with the corresponding HTML page and DS specification. Keep DS numbering contiguous, regenerate `docs/specs/matrix.md`, and verify documentation links before publishing.

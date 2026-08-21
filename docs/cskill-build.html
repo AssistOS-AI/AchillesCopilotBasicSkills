@@ -12,24 +12,21 @@
 </head>
 <body>
   <div data-include="partials/header.html"></div>
-  <main class="page">
-    <div class="page__panel content">
-      <p class="breadcrumb"><a href="index.html">Home</a> / cskill-build</p>
-      <p class="kicker">Skill Detail</p>
-      <h1>cskill-build</h1>
-      <p><code>cskill-build</code> defines how a C-Skill separates its stable descriptor from the deeper specification set that drives generated executable JavaScript. It is the repository convention for repeatable, specification-first skills.</p>
-      <table class="meta-table">
-        <tr><th>Depends on</th><td><code>gamp-specs</code>, <code>achilles-specs</code></td></tr>
-        <tr><th>Primary artifacts</th><td><code>cskill.md</code>, <code>specs/</code></td></tr>
-        <tr><th>Primary spec</th><td><a href="specsLoader.html?spec=DS006-cskill-build.md">DS006-cskill-build.md</a></td></tr>
-      </table>
-      <h2>Design Position</h2>
-      <p>This skill exists for capabilities that are too substantial for inline logic but still benefit from being generated from stable specifications. The descriptor carries the public contract, while the module-level specs define the deeper behavioral surface.</p>
-      <p>Under the current DS rules, <code>Core Content</code> should hold the general approach, boundaries, and invariants, while detailed rationale and unresolved alternatives belong in numbered <code>Decisions &amp; Questions</code> entries inside the relevant spec files.</p>
-      <h2>Portability</h2>
-      <p>The repository treats this skill as portable guidance rather than a root-runtime feature. Any example code or templates for future C-Skills should therefore live inside the copied skill folder, not in a shared repository-level source directory. Downstream projects should not duplicate the imported family guidance under their own <code>docs/</code> tree.</p>
-    </div>
-  </main>
+  <main class="page"><article class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">AchillesCopilotBasicSkills</a> / cskill-build</p>
+      <p class="kicker">Skill reference</p>
+      <h1>C-Skill Build</h1>
+      <p>Defines specification-driven, code-backed skills with stable descriptors and generated JavaScript implementations.</p>
+      <h2>Operational contract</h2>
+      <p>The contract keeps routing, input, output, and hard constraints in cskill.md, places deeper module requirements in specs/, and treats src/index.mjs or src/index.js as the executable action(args) entrypoint.</p>
+      <h2>Local artifacts</h2>
+      <ul><li><code>SKILL.md</code> defines descriptor and source-layout rules.</li><li><code>DS.md</code> records the separation between contract, specification, and generated implementation.</li><li><code>skill.json</code> declares expected outputs and dependencies.</li></ul>
+      <h2>Dependencies and outputs</h2>
+      <p><strong>Declared dependencies:</strong> <code>gamp-specs</code>, <code>achilles-specs</code></p>
+      <p>The descriptor and catalog metadata define the outputs for this skill. Consumers must preserve the complete folder when copying it so referenced files and examples remain available.</p>
+      <h2>Maintenance invariant</h2>
+      <p class="note">Descriptors and module specifications remain authoritative when executable code is generated or regenerated.</p>
+      <p>See <a href="specsLoader.html?spec=DS004-cskill-build.md">DS004</a> for the authoritative skill contract.</p></article></main>
   <div data-include="partials/footer.html"></div>
   <script src="partials-loader.js"></script>
 </body>

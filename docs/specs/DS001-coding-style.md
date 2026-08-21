@@ -2,36 +2,30 @@
 id: DS001
 title: Coding Style
 status: implemented
-owner: gamp-specs
-summary: Defines repository-wide coding style, file layout, modular test organization, and size constraints including periodic fileSizesCheck usage.
+owner: repository
+summary: Defines source layout, documentation synchronization, and validation rules for AchillesCopilotBasicSkills.
 ---
 
-# DS001 Coding Style
+# Coding Style
 
 ## Introduction
 
-This specification defines the repository-wide implementation and documentation policy. It is the coding-style authority referenced by `AGENTS.md` and the skill descriptors, and it covers source-code defaults, dependency policy, file layout, test organization, readability constraints, and the Achilles-specific runtime conventions that apply to all work in this repository.
+This specification is the coding-style, source-layout, and test-organization authority for AchillesCopilotBasicSkills.
 
 ## Core Content
 
-The repository must default to Node.js with `.mjs` source files and async/await. External dependencies must not be introduced without explicit user approval. Persistent output saved to disk must remain in English even when the interactive conversation uses another language.
+Persistent documentation, specifications, descriptors, and code comments must be written in English. JavaScript modules should use modern ECMAScript modules, async/await for asynchronous control flow, explicit exports, and focused functions with narrow responsibilities. External dependencies must not be introduced without explicit approval.
 
-This repository is not a production runtime package. It exists to hold portable skill folders plus the tests and documentation that validate them. Example code must therefore live inside the relevant skill folder, typically under `examples/`, rather than in a shared repository-level `src/` tree. Tests must be grouped by skill as `tests/<skill-name>/`, and each test file should cover one coherent module boundary or one coherent verification responsibility rather than becoming a monolith.
+Skill-specific implementation, references, examples, tests, templates, and assets must remain inside the owning skill folder unless a repository-wide validation concern genuinely applies to every skill. A root production `src/` tree must not become a hidden dependency for portable skills. Repository-level tests, when present, should be grouped by the skill or shared contract they validate and must use deterministic fixtures rather than machine-specific paths or secrets.
 
-The repository must keep source files small enough to review comfortably on a modern screen. The baseline guardrail is provided by `fileSizesCheck.sh`, which must exist at the repository root and must also be available as `skills/gamp-specs/assets/fileSizesCheck.sh` so new projects initialized from this skill can copy it into place. The current script treats files above 500 lines as warning-level oversized files and files above 800 lines as critical oversized files, while also reporting long lines above 300 characters. As a repository convention, contributors should aim to keep executable source files well below the 700 to 800 line danger zone and should keep line lengths close to normal screen width, with 120 characters acting as the practical readability threshold and 300 characters as the hard long-line warning surfaced by the checker.
-
-The script must be run periodically during maintenance and after larger documentation or source refactors. The output should be used as a refactoring signal rather than ignored as noise. When a file becomes too large, responsibilities should be split into smaller modules instead of normalizing oversized files as acceptable.
-
-AchillesAgentLib is authorized for this repository. The portable example resolver lives in `skills/achilles-specs/examples/depsLoader.mjs` and must attempt parent-directory resolution first and fall back to `node_modules`. Runtime configuration examples live alongside it in the same skill folder and must support manual overrides in addition to environment-based defaults. All LLM interactions must use the `LLMAgent` class through shared runtime configuration.
-
-Documentation must remain synchronized across `AGENTS.md`, `README.md`, `docs/`, and `docs/specs/`. DS files must use the `DS0xx-description.md` naming convention, include frontmatter metadata for status tracking, and remain contiguous with no skipped intermediate numbers. Ordinary DS files must use `Introduction`, `Core Content`, `Decisions & Questions`, and `Conclusion`, and the `Decisions & Questions` section must use numbered question subchapters such as `### Question #1: ...`. In downstream projects that consume imported skills from this catalog, the host project's `docs/` and `docs/specs/` trees must stay focused on the host project rather than duplicating imported-skill DS files or skill pages.
+Files should remain focused and reviewable. Run `./fileSizesCheck.sh` after substantial changes and split files when size or line length obscures responsibilities. Documentation changes must regenerate `docs/specs/matrix.md`, verify local HTML and asset links, and test browser-resolved resources over HTTP when partials or relative assets are involved.
 
 ## Decisions & Questions
 
-### Question #1: Why should downstream projects keep imported-skill documentation out of the host project's `docs/` tree?
+### Question #1: Where do portable examples belong?
 
-Response: The copied skills are agent-facing tooling, not part of the host project's primary source and documentation surface. Duplicating their DS material inside the host project's documentation creates drift, encourages stale copies, and blurs the boundary between project architecture and reusable agent tooling. The host project should document how it uses the skills only where that usage affects the host system, while the skill-specific contract remains with the copied skill folder and the catalog repository.
+Response: Examples belong inside the relevant skill folder so the complete operational contract survives when that folder is copied into another repository.
 
 ## Conclusion
 
-Future code changes must preserve these defaults unless the affected DS files are updated with the new authoritative rationale. Deviations from the runtime, size, readability, or documentation policy require synchronized DS and agent-guidance updates.
+Repository changes must preserve modular skill folders, explicit contracts, deterministic validation, and synchronized documentation.

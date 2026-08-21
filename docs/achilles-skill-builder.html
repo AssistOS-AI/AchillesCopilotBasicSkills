@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AchillesCopilotBasicSkills Documentation</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+  </script>
+</head>
+<body>
+  <div data-include="partials/header.html"></div>
+  <main class="page"><article class="page__panel content">
+      <p class="breadcrumb"><a href="index.html">AchillesCopilotBasicSkills</a> / achilles-skill-builder</p>
+      <p class="kicker">Skill reference</p>
+      <h1>Achilles Skill Builder</h1>
+      <p>Defines the descriptor, layout, discovery, and execution contracts for every AchillesAgentLib skill family.</p>
+      <h2>Operational contract</h2>
+      <p>The skill selects among cskill, oskill, dcgskill, tskill, Anthropic-style SKILL.md bundles, and dynamic Ploinky agent skills. It specifies recognized sections, entrypoints, allowlists, session types, generated-artifact boundaries, and the plain-text result contract used by the runtime.</p>
+      <h2>Local artifacts</h2>
+      <ul><li><code>SKILL.md</code> contains the complete family reference and authoring checklist.</li></ul>
+      <h2>Dependencies and outputs</h2>
+      <p><strong>Declared dependencies:</strong> None declared.</p>
+      <p>The descriptor and catalog metadata define the outputs for this skill. Consumers must preserve the complete folder when copying it so referenced files and examples remain available.</p>
+      <h2>Maintenance invariant</h2>
+      <p class="note">The descriptor filename determines the family, AgentLib-native descriptors use only recognized sections, and dynamic Ploinky agent skills are exposed only through oskill Allowed Agents.</p>
+      <p>See <a href="specsLoader.html?spec=DS002-achilles-skill-builder.md">DS002</a> for the authoritative skill contract.</p></article></main>
+  <div data-include="partials/footer.html"></div>
+  <script src="partials-loader.js"></script>
+</body>
+</html>
